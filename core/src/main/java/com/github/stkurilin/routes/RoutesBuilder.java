@@ -90,6 +90,6 @@ public class RoutesBuilder {
     }
 
     public Routes createRoutes() {
-        return new Routes(invoker, instanceMethodRetriever, responseProducer, rules, argumentsCollector);
+        return new Routes(new RuleMatcher(rules), new Caller(invoker, argumentsCollector, instanceMethodRetriever), responseProducer);
     }
 }

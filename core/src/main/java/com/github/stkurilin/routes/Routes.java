@@ -6,38 +6,43 @@ import com.github.stkurilin.routes.out.Response;
 import com.github.stkurilin.routes.util.MatchResult;
 import com.github.stkurilin.routes.util.Matcher;
 
+import java.util.Map;
+
 /**
  * @author Stanislav  Kurilin
  */
 public class Routes implements Matcher<Request, Response> {
-    private final Invoker invoker;
-    private final ArgumentsCollector argumentsCollector;
-    private final InstanceMethodRetriever instanceMethodRetriever;
-    private final ResponseProducer responseProducer;
     private final RuleMatcher ruleMatcher;
+    private final Caller caller;
+    private final ResponseProducer responseProducer;
 
-    public Routes(Invoker invoker, InstanceMethodRetriever instanceMethodRetriever, ResponseProducer responseProducer, Iterable<Rule> rules, ArgumentsCollector argumentsCollector) {
-        this.invoker = invoker;
-        this.instanceMethodRetriever = instanceMethodRetriever;
+    public Routes(RuleMatcher ruleMatcher, Caller caller, ResponseProducer responseProducer) {
+        this.ruleMatcher = ruleMatcher;
+        this.caller = caller;
         this.responseProducer = responseProducer;
-        this.argumentsCollector = argumentsCollector;
-        this.ruleMatcher = new RuleMatcher(rules);
     }
 
     @Override
     public MatchResult<Response> apply(final Request request) {
-        return ruleMatcher.apply(request).apply(new MatchResult.MatchResultVisitor<Rule.MatchingRule, MatchResult<Response>>() {
-            @Override
-            public MatchResult<Response> matched(Rule.MatchingRule res) {
-                final JavaMethod targetMethod = instanceMethodRetriever.apply(res.targetSpec.clazz(), res.targetSpec.methodId());
-                final Object apply = invoker.apply(targetMethod, argumentsCollector.apply(request, res));
-                return MatchResult.matched(responseProducer.apply(res, apply));
-            }
+        return ruleMatcher
+                .apply(request)
+                .apply(new MatchResult.MatchResultVisitor<Rule.MatchingRule, MatchResult<Response>>() {
+                    @Override
+                    public MatchResult<Response> matched(Rule.MatchingRule appliedRule) {
+                        return MatchResult.matched(responseProducer.apply(
+                                appliedRule,
+                                caller.apply(appliedRule.targetSpec,
+                                        collectInputs(request, appliedRule))));
+                    }
 
-            @Override
-            public MatchResult<Response> skipped() {
-                return MatchResult.skipped();
-            }
-        });
+                    @Override
+                    public MatchResult<Response> skipped() {
+                        return MatchResult.skipped();
+                    }
+                });
+    }
+
+    private Map<String, String> collectInputs(Request request, Rule.MatchingRule appliedRule) {
+        return appliedRule.retrieved;
     }
 }
