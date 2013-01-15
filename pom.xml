@@ -26,5 +26,11 @@
             <version>1.8.4</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>14.0-rc1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>
