@@ -4,7 +4,7 @@
 *.jar
 *.war
 *.ear
-
+.idea
 \.idea
 .*\.iml
 .*\.iws
