@@ -1,6 +1,4 @@
-package com.github.stkurilin.routes.inp;
-
-import com.github.stkurilin.routes.conf.Method;
+package com.github.stkurilin.routes.api;
 
 /**
  * @author Stanislav  Kurilin

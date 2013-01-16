@@ -1,4 +1,4 @@
-package com.github.stkurilin.routes;
+package com.github.stkurilin.routes.api;
 
 import java.util.List;
 

@@ -1,9 +1,7 @@
 package com.github.stkurilin.routes;
 
-import com.github.stkurilin.routes.conf.InstanceFinder;
-import com.github.stkurilin.routes.conf.Method;
-import com.github.stkurilin.routes.inp.Request;
-import com.github.stkurilin.routes.out.Response;
+import com.github.stkurilin.routes.api.*;
+import com.github.stkurilin.routes.impl.RoutesBuilder;
 import com.github.stkurilin.routes.util.MatchResult;
 
 import javax.servlet.*;

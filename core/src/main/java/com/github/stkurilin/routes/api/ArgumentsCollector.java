@@ -1,6 +1,4 @@
-package com.github.stkurilin.routes;
-
-import com.github.stkurilin.routes.inp.Request;
+package com.github.stkurilin.routes.api;
 
 /**
  * @author Stanislav  Kurilin

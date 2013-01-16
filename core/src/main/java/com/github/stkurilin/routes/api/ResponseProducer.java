@@ -1,7 +1,4 @@
-package com.github.stkurilin.routes.conf;
-
-import com.github.stkurilin.routes.Rule;
-import com.github.stkurilin.routes.out.Response;
+package com.github.stkurilin.routes.api;
 
 /**
  * @author Stanislav  Kurilin

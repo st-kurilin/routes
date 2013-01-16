@@ -1,8 +1,6 @@
-package com.github.stkurilin.routes;
+package com.github.stkurilin.routes.impl;
 
-import com.github.stkurilin.routes.conf.ResponseProducer;
-import com.github.stkurilin.routes.inp.Request;
-import com.github.stkurilin.routes.out.Response;
+import com.github.stkurilin.routes.api.*;
 
 import java.lang.reflect.Method;
 import java.util.*;

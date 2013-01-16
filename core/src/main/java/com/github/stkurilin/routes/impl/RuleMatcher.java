@@ -1,6 +1,7 @@
-package com.github.stkurilin.routes;
+package com.github.stkurilin.routes.impl;
 
-import com.github.stkurilin.routes.inp.Request;
+import com.github.stkurilin.routes.api.Request;
+import com.github.stkurilin.routes.api.Rule;
 import com.github.stkurilin.routes.util.MatchResult;
 import com.github.stkurilin.routes.util.Matcher;
 

@@ -1,6 +1,10 @@
-package com.github.stkurilin.routes;
+package com.github.stkurilin.routes.impl;
 
-import com.github.stkurilin.routes.conf.TargetSpec;
+import com.github.stkurilin.routes.api.TargetSpec;
+import com.github.stkurilin.routes.api.ArgumentsCollector;
+import com.github.stkurilin.routes.api.InstanceMethodRetriever;
+import com.github.stkurilin.routes.api.Invoker;
+import com.github.stkurilin.routes.api.JavaMethod;
 
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package com.github.stkurilin.routes.out;
+package com.github.stkurilin.routes.api;
 
 /**
  * @author Stanislav  Kurilin

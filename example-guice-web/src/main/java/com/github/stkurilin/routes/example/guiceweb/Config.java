@@ -1,13 +1,12 @@
 package com.github.stkurilin.routes.example.guiceweb;
 
 import com.github.stkurilin.routes.RoutesFilter;
-import com.github.stkurilin.routes.Rule;
-import com.github.stkurilin.routes.RuleImpl;
-import com.github.stkurilin.routes.conf.InstanceFinder;
-import com.github.stkurilin.routes.conf.Method;
-import com.github.stkurilin.routes.conf.TargetSpec;
-import com.github.stkurilin.routes.conf.UriSpec;
-import com.github.stkurilin.routes.example.guiceweb.services.Foo;
+import com.github.stkurilin.routes.api.Rule;
+import com.github.stkurilin.routes.impl.RuleImpl;
+import com.github.stkurilin.routes.api.InstanceFinder;
+import com.github.stkurilin.routes.api.Method;
+import com.github.stkurilin.routes.api.TargetSpec;
+import com.github.stkurilin.routes.api.UriSpec;
 import com.github.stkurilin.routes.example.guiceweb.services.FooImpl;
 import com.github.stkurilin.routes.example.guiceweb.services.ServicesModule;
 import com.google.inject.Guice;

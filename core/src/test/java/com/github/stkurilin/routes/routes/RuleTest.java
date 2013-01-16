@@ -1,12 +1,12 @@
 package com.github.stkurilin.routes.routes;
 
 
-import com.github.stkurilin.routes.Rule;
-import com.github.stkurilin.routes.RuleImpl;
-import com.github.stkurilin.routes.conf.Method;
-import com.github.stkurilin.routes.conf.TargetSpec;
-import com.github.stkurilin.routes.conf.UriSpec;
-import com.github.stkurilin.routes.inp.Request;
+import com.github.stkurilin.routes.api.Rule;
+import com.github.stkurilin.routes.impl.RuleImpl;
+import com.github.stkurilin.routes.api.Method;
+import com.github.stkurilin.routes.api.TargetSpec;
+import com.github.stkurilin.routes.api.UriSpec;
+import com.github.stkurilin.routes.api.Request;
 import com.github.stkurilin.routes.util.MatchResult;
 import com.google.common.collect.ImmutableMap;
 import org.testng.annotations.Test;

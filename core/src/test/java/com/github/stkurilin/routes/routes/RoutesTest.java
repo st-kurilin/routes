@@ -1,10 +1,9 @@
 package com.github.stkurilin.routes.routes;
 
-import com.github.stkurilin.routes.*;
-import com.github.stkurilin.routes.conf.ResponseProducer;
-import com.github.stkurilin.routes.conf.TargetSpec;
-import com.github.stkurilin.routes.inp.Request;
-import com.github.stkurilin.routes.out.Response;
+import com.github.stkurilin.routes.api.*;
+import com.github.stkurilin.routes.api.TargetSpec;
+import com.github.stkurilin.routes.impl.Caller;
+import com.github.stkurilin.routes.impl.RuleMatcher;
 import com.github.stkurilin.routes.util.MatchResult;
 import org.testng.annotations.Test;
 

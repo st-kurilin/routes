@@ -1,7 +1,7 @@
 package com.github.stkurilin.routes.routes;
 
 
-import com.github.stkurilin.routes.conf.TargetSpec;
+import com.github.stkurilin.routes.api.TargetSpec;
 import com.github.stkurilin.routes.util.MatchResult;
 
 import static org.testng.Assert.assertFalse;
