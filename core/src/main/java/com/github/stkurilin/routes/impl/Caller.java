@@ -1,10 +1,9 @@
 package com.github.stkurilin.routes.impl;
 
-import com.github.stkurilin.routes.api.TargetSpec;
 import com.github.stkurilin.routes.api.ArgumentsCollector;
-import com.github.stkurilin.routes.api.InstanceMethodRetriever;
+import com.github.stkurilin.routes.api.InstanceFinder;
 import com.github.stkurilin.routes.api.Invoker;
-import com.github.stkurilin.routes.api.JavaMethod;
+import com.github.stkurilin.routes.api.TargetSpec;
 
 import java.util.Map;
 
@@ -15,18 +14,18 @@ import static java.util.Collections.emptyList;
  */
 public class Caller {
     private final Invoker invoker;
+    private final InstanceFinder instanceFinder;
     private final ArgumentsCollector argumentsCollector;
-    private final InstanceMethodRetriever instanceMethodRetriever;
 
-    public Caller(Invoker invoker, ArgumentsCollector argumentsCollector, InstanceMethodRetriever instanceMethodRetriever) {
+
+    public Caller(Invoker invoker, InstanceFinder instanceFinder, ArgumentsCollector argumentsCollector) {
         this.invoker = invoker;
+        this.instanceFinder = instanceFinder;
         this.argumentsCollector = argumentsCollector;
-        this.instanceMethodRetriever = instanceMethodRetriever;
     }
 
     public Object apply(TargetSpec targetSpec, Map<String, String> availableInputs) {
-        final JavaMethod targetMethod = instanceMethodRetriever.apply(targetSpec.clazz(), targetSpec.methodId());
-        final Object res = invoker.apply(targetMethod, emptyList());
-        return res;
+        final JavaMethod targetMethod = JavaMethod.from(instanceFinder.apply(targetSpec.clazz()), targetSpec.methodId());
+        return invoker.apply(targetMethod, emptyList());
     }
 }

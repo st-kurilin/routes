@@ -14,11 +14,9 @@ import java.io.IOException;
  */
 public class RoutesFilter implements Filter {
     private Routes routes;
-    private InstanceFinder instanceFinder;
 
     public void init(InstanceFinder instanceFinder, Iterable<Rule> rules) {
-        this.instanceFinder = instanceFinder;
-        routes = new RoutesBuilder().setRules(rules).createRoutes();
+        routes = new RoutesBuilder().setInstanceFinder(instanceFinder).setRules(rules).createRoutes();
     }
 
     @Override
@@ -29,7 +27,8 @@ public class RoutesFilter implements Filter {
     public void doFilter(final ServletRequest servletRequest,
                          final ServletResponse servletResponse,
                          final FilterChain filterChain) throws IOException, ServletException {
-        if (instanceFinder == null) throw new RuntimeException("instanceFinder should be specified");
+
+        if (routes == null) throw new RuntimeException("should be initialized");
         final HttpServletRequest req = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
         final MatchResult<Response> matchResult = routes.apply(new Request() {

@@ -2,8 +2,8 @@ package com.github.stkurilin.routes.impl;
 
 import com.github.stkurilin.routes.api.*;
 
-import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class RoutesBuilder {
     private Invoker invoker = new Invoker() {
@@ -12,36 +12,13 @@ public class RoutesBuilder {
             return method.apply(args);
         }
     };
-    private InstanceMethodRetriever instanceMethodRetriever = new InstanceMethodRetriever() {
-        final Map<Class<?>, Object> instances = new HashMap<Class<?>, Object>();
+    private InstanceFinder instanceFinder;
 
-        @Override
-        public JavaMethod apply(final Class<?> clazz, String methodId) {
-            for (final Method each : clazz.getMethods()) {
-                if (each.getName().equals(methodId))
-                    return new JavaMethod() {
-                        @Override
-                        public List<Class<?>> argClasses() {
-                            return Arrays.asList(each.getParameterTypes());
-                        }
+    public RoutesBuilder setInstanceFinder(InstanceFinder instanceFinder) {
+        this.instanceFinder = instanceFinder;
+        return this;
+    }
 
-                        @Override
-                        public Object apply(Iterable<Object> args) {
-                            try {
-                                if (!instances.containsKey(clazz))
-                                    instances.put(clazz, clazz.newInstance());
-                                return instances.get(clazz);
-                            } catch (InstantiationException e) {
-                                throw new RuntimeException(e);
-                            } catch (IllegalAccessException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                    };
-            }
-            throw new RuntimeException(String.format("Couldn't find method %s in %s", methodId, clazz));
-        }
-    };
     private ResponseProducer responseProducer = new ResponseProducer() {
         @Override
         public Response apply(Rule.MatchingRule appliedRule, final Object result) {
@@ -63,11 +40,6 @@ public class RoutesBuilder {
 
     public RoutesBuilder setInvoker(Invoker invoker) {
         this.invoker = invoker;
-        return this;
-    }
-
-    public RoutesBuilder setInstanceMethodRetriever(InstanceMethodRetriever instanceMethodRetriever) {
-        this.instanceMethodRetriever = instanceMethodRetriever;
         return this;
     }
 
@@ -93,6 +65,6 @@ public class RoutesBuilder {
             public Map<String, String> apply(Request request, Rule.MatchingRule appliedRule) {
                 return appliedRule.getRetrieved();
             }
-        }, new Caller(invoker, argumentsCollector, instanceMethodRetriever), responseProducer);
+        }, new Caller(invoker, instanceFinder, argumentsCollector), responseProducer);
     }
 }
