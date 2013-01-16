@@ -13,12 +13,20 @@ public interface Rule {
     MatchResult<MatchingRule> apply(Request input);
 
     class MatchingRule {
-        public final TargetSpec targetSpec;
-        public final Map<String, String> retrieved;
+        private final TargetSpec targetSpec;
+        private final Map<String, String> retrieved;
 
         public MatchingRule(TargetSpec targetSpec, Map<String, String> retrieved) {
             this.targetSpec = targetSpec;
             this.retrieved = retrieved;
+        }
+
+        public TargetSpec getTargetSpec() {
+            return targetSpec;
+        }
+
+        public Map<String, String> getRetrieved() {
+            return retrieved;
         }
     }
 }

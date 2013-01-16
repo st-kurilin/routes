@@ -59,7 +59,7 @@ public class RoutesBuilder {
     private ArgumentsCollector argumentsCollector = new ArgumentsCollector() {
         @Override
         public Iterable<Object> apply(Request request, Rule.MatchingRule appliedRule) {
-            return (Iterable) appliedRule.retrieved.values();
+            return (Iterable) appliedRule.getRetrieved().values();
         }
     };
 
@@ -93,7 +93,7 @@ public class RoutesBuilder {
         return new Routes(new RuleMatcher(rules), new InputsCollector() {
             @Override
             public Map<String, String> apply(Request request, Rule.MatchingRule appliedRule) {
-                return appliedRule.retrieved;
+                return appliedRule.getRetrieved();
             }
         }, new Caller(invoker, argumentsCollector, instanceMethodRetriever), responseProducer);
     }

@@ -51,7 +51,7 @@ public class RuleTest {
         assertTrue(rule.apply(request).apply(new MatchResult.MatchResultVisitor<Rule.MatchingRule, Boolean>() {
             @Override
             public Boolean matched(Rule.MatchingRule res) {
-                return res.retrieved.get("id").equals("2");
+                return res.getRetrieved().get("id").equals("2");
             }
 
             @Override
@@ -69,7 +69,7 @@ public class RuleTest {
         assertTrue(rule.apply(request).apply(new MatchResult.MatchResultVisitor<Rule.MatchingRule, Boolean>() {
             @Override
             public Boolean matched(Rule.MatchingRule res) {
-                return ImmutableMap.of("parent", "22", "child", "e").equals(res.retrieved);
+                return ImmutableMap.of("parent", "22", "child", "e").equals(res.getRetrieved());
             }
 
             @Override
@@ -87,7 +87,7 @@ public class RuleTest {
         assertTrue(rule.apply(request).apply(new MatchResult.MatchResultVisitor<Rule.MatchingRule, Boolean>() {
             @Override
             public Boolean matched(Rule.MatchingRule res) {
-                return ImmutableMap.of("id", "ho/bo").equals(res.retrieved);
+                return ImmutableMap.of("id", "ho/bo").equals(res.getRetrieved());
             }
 
             @Override

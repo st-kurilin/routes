@@ -31,7 +31,7 @@ public class Routes implements Matcher<Request, Response> {
                     public MatchResult<Response> matched(Rule.MatchingRule appliedRule) {
                         return MatchResult.matched(responseProducer.apply(
                                 appliedRule,
-                                caller.apply(appliedRule.targetSpec,
+                                caller.apply(appliedRule.getTargetSpec(),
                                         inputsCollector.apply(request, appliedRule))));
                     }
 
