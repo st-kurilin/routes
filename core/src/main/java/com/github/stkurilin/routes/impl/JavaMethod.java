@@ -5,7 +5,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,10 +34,10 @@ public class JavaMethod {
         return classes;
     }
 
-    public Object apply(Iterable<Object> args) {
+    public Object apply(Iterable<? extends Object> args) {
         try {
             final List<Object> list = new ArrayList<Object>();
-            Collections.addAll(list, args);
+            for (Object o : args) list.add(o);
             return method.invoke(instance, list.toArray());
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);

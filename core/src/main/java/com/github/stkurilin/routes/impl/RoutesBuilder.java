@@ -3,12 +3,11 @@ package com.github.stkurilin.routes.impl;
 import com.github.stkurilin.routes.api.*;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class RoutesBuilder {
     private Invoker invoker = new Invoker() {
         @Override
-        public Object apply(JavaMethod method, Iterable<Object> args) {
+        public Object apply(JavaMethod method, Iterable<String> args) {
             return method.apply(args);
         }
     };
@@ -31,12 +30,7 @@ public class RoutesBuilder {
         }
     };
     private ArrayList<Rule> rules = new ArrayList<Rule>();
-    private ArgumentsCollector argumentsCollector = new ArgumentsCollector() {
-        @Override
-        public Iterable<Object> apply(Request request, Rule.MatchingRule appliedRule) {
-            return (Iterable) appliedRule.getRetrieved().values();
-        }
-    };
+    private ArgumentsCollector argumentsCollector = new ArgumentsCollector();
 
     public RoutesBuilder setInvoker(Invoker invoker) {
         this.invoker = invoker;
@@ -60,11 +54,6 @@ public class RoutesBuilder {
     }
 
     public Routes createRoutes() {
-        return new Routes(new RuleMatcher(rules), new InputsCollector() {
-            @Override
-            public Map<String, String> apply(Request request, Rule.MatchingRule appliedRule) {
-                return appliedRule.getRetrieved();
-            }
-        }, new Caller(invoker, instanceFinder, argumentsCollector), responseProducer);
+        return new Routes(new RuleMatcher(rules), new InputsCollector(), new Caller(invoker, instanceFinder, argumentsCollector), responseProducer);
     }
 }

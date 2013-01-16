@@ -7,8 +7,6 @@ import com.github.stkurilin.routes.api.TargetSpec;
 
 import java.util.Map;
 
-import static java.util.Collections.emptyList;
-
 /**
  * @author Stanislav Kurilin
  */
@@ -26,6 +24,6 @@ public class Caller {
 
     public Object apply(TargetSpec targetSpec, Map<String, String> availableInputs) {
         final JavaMethod targetMethod = JavaMethod.from(instanceFinder.apply(targetSpec.clazz()), targetSpec.methodId());
-        return invoker.apply(targetMethod, emptyList());
+        return invoker.apply(targetMethod, argumentsCollector.apply(targetSpec, availableInputs));
     }
 }

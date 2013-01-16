@@ -5,6 +5,8 @@ import java.util.Map;
 /**
  * @author Stanislav  Kurilin
  */
-public interface InputsCollector {
-    Map<String, String> apply(Request request, Rule.MatchingRule appliedRule);
+public class InputsCollector {
+    public Map<String, String> apply(Request request, Rule.MatchingRule appliedRule) {
+        return appliedRule.getRetrieved();
+    }
 }
