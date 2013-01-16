@@ -6,18 +6,18 @@ import com.github.stkurilin.routes.out.Response;
 import com.github.stkurilin.routes.util.MatchResult;
 import com.github.stkurilin.routes.util.Matcher;
 
-import java.util.Map;
-
 /**
  * @author Stanislav  Kurilin
  */
 public class Routes implements Matcher<Request, Response> {
     private final RuleMatcher ruleMatcher;
+    private final InputsCollector inputsCollector;
     private final Caller caller;
     private final ResponseProducer responseProducer;
 
-    public Routes(RuleMatcher ruleMatcher, Caller caller, ResponseProducer responseProducer) {
+    public Routes(RuleMatcher ruleMatcher, InputsCollector inputsCollector, Caller caller, ResponseProducer responseProducer) {
         this.ruleMatcher = ruleMatcher;
+        this.inputsCollector = inputsCollector;
         this.caller = caller;
         this.responseProducer = responseProducer;
     }
@@ -32,7 +32,7 @@ public class Routes implements Matcher<Request, Response> {
                         return MatchResult.matched(responseProducer.apply(
                                 appliedRule,
                                 caller.apply(appliedRule.targetSpec,
-                                        collectInputs(request, appliedRule))));
+                                        inputsCollector.apply(request, appliedRule))));
                     }
 
                     @Override
@@ -40,9 +40,5 @@ public class Routes implements Matcher<Request, Response> {
                         return MatchResult.skipped();
                     }
                 });
-    }
-
-    private Map<String, String> collectInputs(Request request, Rule.MatchingRule appliedRule) {
-        return appliedRule.retrieved;
     }
 }

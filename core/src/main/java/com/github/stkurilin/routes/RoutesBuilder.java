@@ -90,6 +90,11 @@ public class RoutesBuilder {
     }
 
     public Routes createRoutes() {
-        return new Routes(new RuleMatcher(rules), new Caller(invoker, argumentsCollector, instanceMethodRetriever), responseProducer);
+        return new Routes(new RuleMatcher(rules), new InputsCollector() {
+            @Override
+            public Map<String, String> apply(Request request, Rule.MatchingRule appliedRule) {
+                return appliedRule.retrieved;
+            }
+        }, new Caller(invoker, argumentsCollector, instanceMethodRetriever), responseProducer);
     }
 }
