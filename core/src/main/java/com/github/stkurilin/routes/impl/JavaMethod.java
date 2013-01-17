@@ -3,7 +3,6 @@ package com.github.stkurilin.routes.impl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,11 +33,9 @@ public class JavaMethod {
         return classes;
     }
 
-    public Object apply(Iterable<? extends Object> args) {
+    public Object apply(List<? extends Object> args) {
         try {
-            final List<Object> list = new ArrayList<Object>();
-            for (Object o : args) list.add(o);
-            return method.invoke(instance, list.toArray());
+            return method.invoke(instance, args.toArray());
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         } catch (InvocationTargetException e) {

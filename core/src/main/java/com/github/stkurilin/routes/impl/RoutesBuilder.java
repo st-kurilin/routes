@@ -8,7 +8,9 @@ public class RoutesBuilder {
     private Invoker invoker = new Invoker() {
         @Override
         public Object apply(JavaMethod method, Iterable<String> args) {
-            return method.apply(args);
+            final ArrayList<String> strings = new ArrayList<String>();
+            for (String s : args) strings.add(s);
+            return method.apply(strings);
         }
     };
     private InstanceFinder instanceFinder;
