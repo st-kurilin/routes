@@ -1,10 +1,12 @@
 package com.github.stkurilin.routes.routes;
 
-import com.github.stkurilin.routes.api.*;
-import com.github.stkurilin.routes.api.TargetSpec;
-import com.github.stkurilin.routes.impl.Caller;
-import com.github.stkurilin.routes.impl.RuleMatcher;
-import com.github.stkurilin.routes.util.MatchResult;
+import com.github.stkurilin.routes.Routes;
+import com.github.stkurilin.routes.Rule;
+import com.github.stkurilin.routes.internal.*;
+import com.github.stkurilin.routes.TargetSpec;
+import com.github.stkurilin.routes.internal.Caller;
+import com.github.stkurilin.routes.internal.RuleMatcher;
+import com.github.stkurilin.routes.MatchResult;
 import org.testng.annotations.Test;
 
 import java.util.Map;

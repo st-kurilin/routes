@@ -1,9 +1,9 @@
 package com.github.stkurilin.routes.routes;
 
-import com.github.stkurilin.routes.api.Invoker;
-import com.github.stkurilin.routes.api.InvokerWithMapping;
-import com.github.stkurilin.routes.api.Transformer;
-import com.github.stkurilin.routes.impl.JavaMethod;
+import com.github.stkurilin.routes.internal.Invoker;
+import com.github.stkurilin.routes.internal.InvokerWithMapping;
+import com.github.stkurilin.routes.internal.Transformer;
+import com.github.stkurilin.routes.internal.JavaMethod;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.testng.annotations.Test;

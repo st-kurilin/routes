@@ -1,8 +1,8 @@
 package com.github.stkurilin.routes.routes;
 
-import com.github.stkurilin.routes.api.*;
-import com.github.stkurilin.routes.impl.RoutesBuilder;
-import com.github.stkurilin.routes.impl.RuleImpl;
+import com.github.stkurilin.routes.*;
+import com.github.stkurilin.routes.internal.*;
+import com.github.stkurilin.routes.internal.RuleImpl;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
@@ -36,9 +36,9 @@ public class TargetInvokeTest {
         when(targetSpec.methodId()).thenReturn("foo1");
         when(targetSpec.args()).thenReturn(Collections.<String>emptyList());
 
-        final Routes routes = new RoutesBuilder().setInstanceFinder(instanceFinder)
-                .setRules(of(rule(of(literal("bar1")), targetSpec)))
-                .createRoutes();
+        final Routes routes = new RoutesBuilder().instanceFinder(instanceFinder)
+                .addRule(rule(of(literal("bar1")), targetSpec))
+                .build();
 
         routes.apply(request(Method.Get, "/bar1"));
 
@@ -56,9 +56,9 @@ public class TargetInvokeTest {
         when(targetSpec.methodId()).thenReturn("foo2");
         when(targetSpec.args()).thenReturn(of("id"));
 
-        final Routes routes = new RoutesBuilder().setInstanceFinder(instanceFinder)
-                .setRules(of(rule(of(literal("bar2"), matcher("id")), targetSpec)))
-                .createRoutes();
+        final Routes routes = new RoutesBuilder().instanceFinder(instanceFinder)
+                .addRule(rule(of(literal("bar2"), matcher("id")), targetSpec))
+                .build();
 
         routes.apply(request(Method.Get, "/bar2/2"));
 
