@@ -1,7 +1,7 @@
 package com.github.stkurilin.routes;
 
 import com.github.stkurilin.routes.internal.RuleCollector;
-import com.github.stkurilin.routes.internal.RuleImpl;
+import com.github.stkurilin.routes.internal.RuleCreator;
 import com.github.stkurilin.routes.internal.UriSpecFromString;
 
 import java.util.Arrays;
@@ -23,7 +23,7 @@ public class RuleFromStringFormBuilder<T> {
     }
 
     public T to(final Class<?> clazz, final String methodId, final String... args) {
-        collector.addRule(new RuleImpl(method, new UriSpecFromString().apply(path), new TargetSpec() {
+        collector.addRule(new RuleCreator().apply(method, new UriSpecFromString().apply(path), new TargetSpec() {
             @Override
             public Class<? extends Object> clazz() {
                 return clazz;

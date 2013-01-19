@@ -12,6 +12,7 @@
         <module>core</module>
         <module>integration</module>
         <module>example-guice-servlet</module>
+        <module>parser</module>
     </modules>
     <dependencies>
         <dependency>

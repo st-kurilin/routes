@@ -5,7 +5,6 @@ import com.github.stkurilin.routes.Rule;
 import com.github.stkurilin.routes.TargetSpec;
 import com.github.stkurilin.routes.UriSpec;
 import com.github.stkurilin.routes.internal.*;
-import com.github.stkurilin.routes.internal.RuleImpl;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -17,7 +16,7 @@ final class TestHelper {
     static Rule rule(Method method, Iterable<UriSpec.Item> items) {
         final UriSpec uriSpec = mock(UriSpec.class);
         when(uriSpec.path()).thenReturn(items);
-        return new RuleImpl(method, uriSpec, mock(TargetSpec.class));
+        return new RuleCreator().apply(method, uriSpec, mock(TargetSpec.class));
     }
 
     static Request request(Method method, String path) {

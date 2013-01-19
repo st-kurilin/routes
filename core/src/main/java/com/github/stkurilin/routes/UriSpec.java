@@ -34,9 +34,23 @@ public interface UriSpec {
         }
     }
 
-    interface ItemVisitor<R> {
-        R literal(String value);
+    static class ItemVisitor<R> {
+        private final R defaultReturn;
 
-        R matcher(String name);
+        public ItemVisitor(R defaultReturn) {
+            this.defaultReturn = defaultReturn;
+        }
+
+        public ItemVisitor() {
+            this(null);
+        }
+
+        public R literal(String value) {
+            return defaultReturn;
+        }
+
+        public R matcher(String name) {
+            return defaultReturn;
+        }
     }
 }

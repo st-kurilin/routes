@@ -2,7 +2,6 @@ package com.github.stkurilin.routes.routes;
 
 import com.github.stkurilin.routes.*;
 import com.github.stkurilin.routes.internal.*;
-import com.github.stkurilin.routes.internal.RuleImpl;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
@@ -69,7 +68,7 @@ public class TargetInvokeTest {
         final UriSpec uriSpec = mock(UriSpec.class);
         when(uriSpec.path()).thenReturn(items);
 
-        return new RuleImpl(Method.Get, uriSpec, mock);
+        return new RuleCreator().apply(Method.Get, uriSpec, mock);
     }
 
 }
