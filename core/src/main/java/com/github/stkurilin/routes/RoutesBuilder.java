@@ -5,9 +5,10 @@ import com.github.stkurilin.routes.internal.Caller;
 import com.github.stkurilin.routes.internal.RuleMatcher;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class RoutesBuilder {
-    private Invoker invoker;
+    private Invoker invoker = new InvokerWithMapping(Collections.<Class<?>, Transformer<?>>emptyMap());
     private InstanceFinder instanceFinder;
     private ArrayList<Rule> rules = new ArrayList<Rule>();
     private ResponseProducer responseProducer = new ResponseProducer() {

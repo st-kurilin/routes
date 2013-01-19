@@ -1,7 +1,12 @@
-package com.github.stkurilin.routes;
+package com.github.stkurilin.routes.guice;
 
+import com.github.stkurilin.routes.Method;
+import com.github.stkurilin.routes.RoutesBuilder;
+import com.github.stkurilin.routes.Rule;
+import com.github.stkurilin.routes.RuleFromStringFormBuilder;
 import com.github.stkurilin.routes.internal.InstanceFinder;
 import com.github.stkurilin.routes.internal.RuleCollector;
+import com.github.stkurilin.routes.servlet.RoutesFilter;
 import com.google.inject.Provider;
 import com.google.inject.servlet.ServletModule;
 

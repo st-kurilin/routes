@@ -13,7 +13,7 @@
     <packaging>war</packaging>
     <dependencies>
         <dependency>
-            <artifactId>guice-servlet-adapter</artifactId>
+            <artifactId>integration</artifactId>
             <groupId>com.github.stkurilin.routes</groupId>
             <version>1.0-SNAPSHOT</version>
         </dependency>

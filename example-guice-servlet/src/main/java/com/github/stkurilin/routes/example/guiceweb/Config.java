@@ -1,8 +1,8 @@
 package com.github.stkurilin.routes.example.guiceweb;
 
-import com.github.stkurilin.routes.RouteGuavaWebModuleBuilder;
 import com.github.stkurilin.routes.example.guiceweb.services.Foo;
 import com.github.stkurilin.routes.example.guiceweb.services.ServicesModule;
+import com.github.stkurilin.routes.guice.RouteGuavaWebModuleBuilder;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;

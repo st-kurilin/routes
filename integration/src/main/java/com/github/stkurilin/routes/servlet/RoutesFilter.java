@@ -1,5 +1,8 @@
-package com.github.stkurilin.routes;
+package com.github.stkurilin.routes.servlet;
 
+import com.github.stkurilin.routes.MatchResult;
+import com.github.stkurilin.routes.Method;
+import com.github.stkurilin.routes.Routes;
 import com.github.stkurilin.routes.internal.*;
 
 import javax.servlet.*;
