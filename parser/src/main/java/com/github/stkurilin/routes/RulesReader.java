@@ -23,7 +23,7 @@ public final class RulesReader {
 
     public Iterable<Rule> apply(Reader source) {
         Method method = null;  //start rule
-        UriSpec uriSpec = null;
+        ArrayList<UriSpec.Item> items = new ArrayList<UriSpec.Item>();
         Class<? extends Object> clazz = null;
         String methodId = null;
         List<String> args = null;
@@ -34,13 +34,18 @@ public final class RulesReader {
             final String text = lexer.yytext();
             System.out.println(String.format("%s:%s", tokenType, text));
             if (tokenType == null && method != null) {
-                result.add(ruleCreator.apply(method, uriSpec, clazz, methodId, args));
+                build(method, items, clazz, methodId, args, result);
+                items = new ArrayList<UriSpec.Item>();
                 method = null;
                 continue;
             }
             if (tokenType == null) continue;
             switch (tokenType) {
                 case IMPORT_KEYWORD:
+                case SLASH:
+                case WHITE_SPACE:
+                case MATCHER_START:
+                case MATCHER_END:
                     break;
                 case IMPORT_CLASS:
                     try {
@@ -51,21 +56,18 @@ public final class RulesReader {
                     }
                 case ACTION:
                     if (method != null) {
-                        result.add(ruleCreator.apply(method, uriSpec, clazz, methodId, args));
+                        build(method, items, clazz, methodId, args, result);
+                        items = new ArrayList<UriSpec.Item>();
                         method = null;
                     }
                     args = new ArrayList<String>();
                     method = method(text);
                     break;
-                case URL:
-                    uriSpec = new UriSpec() {
-                        @Override
-                        public Iterable<Item> path() {
-                            return new ArrayList<Item>() {{
-                                add(new Literal(text));
-                            }};
-                        }
-                    };
+                case LITERAL:
+                    items.add(new UriSpec.Literal(text));
+                    break;
+                case MATCHER:
+                    items.add(new UriSpec.Matcher(text));
                     break;
                 case INSTANCE_ID:
                     clazz = imported.containsKey(text) ? imported.get(text) : findClass(text);
@@ -77,8 +79,7 @@ public final class RulesReader {
                     break;
                 case BAD_CHARACTER:
                     throw new RuntimeException(String.format("Error while parsing >%s< on ", text));
-                case WHITE_SPACE:
-                    break;
+
                 default:
                     throw new AssertionError(tokenType);
             }
@@ -86,6 +87,15 @@ public final class RulesReader {
         if (method != null)
             throw new RuntimeException("fuck");
         return result;
+    }
+
+    private void build(Method method, final ArrayList<UriSpec.Item> items, Class<? extends Object> clazz, String methodId, List<String> args, ArrayList<Rule> result) {
+        result.add(ruleCreator.apply(method, new UriSpec() {
+            @Override
+            public Iterable<Item> path() {
+                return items;
+            }
+        }, clazz, methodId, args));
     }
 
     private String shortFormPart(String text) {

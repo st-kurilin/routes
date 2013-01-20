@@ -37,7 +37,15 @@ import java.util.Iterator;
 CRLF= \n | \r | \r\n
 ACTION= "GET" | "POST" | "PUT" | "DELETE" | "HEAD"
 
-URL=[a-zA-Z/0-9$]+
+
+%state IN_URL
+SLASH="/"
+MATCHER=[a-zA-Z0-9]+
+MATCHER_START="{"
+%state AFTER_MATCHER_START
+%state AFTER_MATCHER
+MATCHER_END="}"
+LITERAL=[a-zA-Z0-9%]+
 
 IMPORT_KEYWORD="import"
 %state AFTER_IMPORT_KEYWORD
@@ -52,7 +60,8 @@ METHOD_ID=[a-zA-Z0-9$]+
 WHITE_SPACE_CHAR=[\ \n\r\t\f]
 
 %state AFTER_ACTION
-%state AFTER_ACTION_DELIMITER
+
+
 %state AFTER_URL
 %state AFTER_URL_DELIMITER
 %state AFTER_INSTANCE_ID
@@ -65,9 +74,15 @@ WHITE_SPACE_CHAR=[\ \n\r\t\f]
 <AFTER_IMPORT_CLASS_DELIMITER> {WHITE_SPACE_CHAR}+ {  yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
 
 <YYINITIAL> {ACTION} { yybegin(AFTER_ACTION); return TokenType.ACTION; }
-<AFTER_ACTION> {WHITE_SPACE_CHAR}+ {  yybegin(AFTER_ACTION_DELIMITER); return TokenType.WHITE_SPACE; }
-<AFTER_ACTION_DELIMITER> {URL} { yybegin(AFTER_URL); return TokenType.URL; }
-<AFTER_URL> {WHITE_SPACE_CHAR}+ {  yybegin(AFTER_URL_DELIMITER); return TokenType.WHITE_SPACE; }
+<AFTER_ACTION> {WHITE_SPACE_CHAR}+ {  yybegin(IN_URL); return TokenType.WHITE_SPACE; }
+
+<IN_URL> {SLASH} { return TokenType.SLASH; }
+<IN_URL> {LITERAL} { return TokenType.LITERAL; }
+<IN_URL> {MATCHER_START} { yybegin(AFTER_MATCHER_START); return TokenType.MATCHER_START; }
+<AFTER_MATCHER_START> {MATCHER} { yybegin(AFTER_MATCHER); return TokenType.MATCHER; }
+<AFTER_MATCHER> {MATCHER_END} {  yybegin(IN_URL); return TokenType.MATCHER_END; }
+
+<IN_URL> {WHITE_SPACE_CHAR}+ {  yybegin(AFTER_URL_DELIMITER); return TokenType.WHITE_SPACE; }
 <AFTER_URL_DELIMITER> {INSTANCE_ID} { yybegin(AFTER_INSTANCE_ID); return TokenType.INSTANCE_ID; }
 <AFTER_INSTANCE_ID> {INSTANCE_METHOD_SEPARATOR} { yybegin(AFTER_INSTANCE_ID_DELIMITER); return TokenType.INSTANCE_METHOD_SEPARATOR; }
 <AFTER_INSTANCE_ID_DELIMITER> {METHOD_ID} { yybegin(YYINITIAL); return TokenType.METHOD_ID; }

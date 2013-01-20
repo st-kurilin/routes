@@ -6,8 +6,12 @@ package com.github.stkurilin.routes.internal;
 public enum TokenType {
     IMPORT_KEYWORD,
     IMPORT_CLASS,
+    MATCHER_START,
+    MATCHER_END,
+    MATCHER,
+    LITERAL,
+    SLASH,
     ACTION,
-    URL,
     INSTANCE_ID,
     INSTANCE_METHOD_SEPARATOR,
     METHOD_ID,
