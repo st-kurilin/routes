@@ -6,13 +6,16 @@ import com.github.stkurilin.routes.internal._RulesLexer;
 
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Stanislav Kurilin
  */
 public final class RulesReader {
     private final RuleCreator ruleCreator;
+    final Map<String, Class<?>> imported = new HashMap<String, Class<?>>();
 
     public RulesReader(RuleCreator ruleCreator) {
         this.ruleCreator = ruleCreator;
@@ -35,9 +38,17 @@ public final class RulesReader {
                 method = null;
                 continue;
             }
-
-
+            if (tokenType == null) continue;
             switch (tokenType) {
+                case IMPORT_KEYWORD:
+                    break;
+                case IMPORT_CLASS:
+                    try {
+                        imported.put(shortFormPart(text), Class.forName(text));
+                        break;
+                    } catch (ClassNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
                 case ACTION:
                     if (method != null) {
                         result.add(ruleCreator.apply(method, uriSpec, clazz, methodId, args));
@@ -57,7 +68,7 @@ public final class RulesReader {
                     };
                     break;
                 case INSTANCE_ID:
-                    clazz = findClass(text);
+                    clazz = imported.containsKey(text) ? imported.get(text) : findClass(text);
                     break;
                 case INSTANCE_METHOD_SEPARATOR:
                     break;
@@ -75,6 +86,10 @@ public final class RulesReader {
         if (method != null)
             throw new RuntimeException("fuck");
         return result;
+    }
+
+    private String shortFormPart(String text) {
+        return text.substring(text.lastIndexOf(".") + ".".length());
     }
 
     private Method method(String text) {

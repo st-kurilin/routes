@@ -31,11 +31,31 @@ public class RulesReaderTest {
     @Test
     public void testSimplestCase() {
         read("GET /foo com.github.stkurilin.routes.Foo#foo");
-        verify(ruleCreator).apply(eq(Method.Get), uriSpec(literal("/foo")), eq(Foo.class), eq("foo"), eq(new ArrayList<String>()));
+        check(Method.Get, uriSpec(literal("/foo")), Foo.class, "foo", new ArrayList<String>());
     }
 
-    private UriSpec uriSpec(UriSpec.Item... items) {
-        return argThat(new UriSpecMatcher(Arrays.asList(items)));
+    @Test
+    public void testSeveralRules() {
+        read("GET /foo com.github.stkurilin.routes.Foo#foo");
+        read("GET /bar com.github.stkurilin.routes.Foo#bar");
+        check(Method.Get, uriSpec(literal("/foo")), Foo.class, "foo", new ArrayList<String>());
+        check(Method.Get, uriSpec(literal("/bar")), Foo.class, "bar", new ArrayList<String>());
+    }
+
+    @Test
+    public void testImport() {
+        read("import com.github.stkurilin.routes.Foo");
+        read("GET /foo Foo#foo");
+        check(Method.Get, uriSpec(literal("/foo")), Foo.class, "foo", new ArrayList<String>());
+    }
+
+
+    private void check(Method method, UriSpecMatcher uriSpec, Class<?> clazz, String methodId, ArrayList<String> args) {
+        verify(ruleCreator).apply(eq(method), argThat(uriSpec), eq(clazz), eq(methodId), eq(args));
+    }
+
+    private UriSpecMatcher uriSpec(UriSpec.Item... items) {
+        return new UriSpecMatcher(Arrays.asList(items));
     }
 
     private void read(String inp) {
