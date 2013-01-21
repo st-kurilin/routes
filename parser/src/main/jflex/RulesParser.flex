@@ -69,6 +69,7 @@ WHITE_SPACE_CHAR=[\ \n\r\t\f]
 %state AFTER_INSTANCE_METHOD
 
 %state IN_ARGS
+%state AFTER_ARG
 ARG = [a-zA-Z0-9]+
 %%
 <YYINITIAL> {IMPORT_KEYWORD} { yybegin(AFTER_IMPORT_KEYWORD); return TokenType.IMPORT_KEYWORD; }
@@ -92,8 +93,10 @@ ARG = [a-zA-Z0-9]+
 
 <AFTER_INSTANCE_METHOD> {WHITE_SPACE_CHAR}+ { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
 <AFTER_INSTANCE_METHOD> "(" { yybegin(IN_ARGS); return TokenType.ARGS_START; }
-<IN_ARGS> {ARG} {yybegin(IN_ARGS); return TokenType.ARG;  }
+<IN_ARGS> {ARG} {yybegin(AFTER_ARG); return TokenType.ARG;  }
+<AFTER_ARG> "," {yybegin(IN_ARGS); return TokenType.ARG_SEPARATOR;  }
 <IN_ARGS> ")" { yybegin(YYINITIAL); return TokenType.ARGS_END; }
+<AFTER_ARG> ")" { yybegin(YYINITIAL); return TokenType.ARGS_END; }
 
 
 {WHITE_SPACE_CHAR}+ { return TokenType.WHITE_SPACE; }
