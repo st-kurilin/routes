@@ -1,6 +1,5 @@
 package com.github.stkurilin.routes;
 
-import com.github.stkurilin.routes.internal.RuleCreator;
 import org.mockito.ArgumentMatcher;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

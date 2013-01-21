@@ -1,9 +1,6 @@
 package com.github.stkurilin.routes.routes;
 
-import com.github.stkurilin.routes.Method;
-import com.github.stkurilin.routes.Rule;
-import com.github.stkurilin.routes.TargetSpec;
-import com.github.stkurilin.routes.UriSpec;
+import com.github.stkurilin.routes.*;
 import com.github.stkurilin.routes.internal.*;
 
 import static org.mockito.Mockito.mock;

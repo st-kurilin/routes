@@ -14,10 +14,10 @@ import java.io.IOException;
  * @author Stanislav  Kurilin
  */
 public class RoutesFilter implements Filter {
-    private Routes routes;
+    private static Routes routes;
 
-    public void initRoutes(Routes routes) {
-        this.routes = routes;
+    public static void initRoutes(Routes routes) {
+        RoutesFilter.routes = routes;
     }
 
     @Override

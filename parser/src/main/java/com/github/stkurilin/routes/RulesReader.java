@@ -1,6 +1,5 @@
 package com.github.stkurilin.routes;
 
-import com.github.stkurilin.routes.internal.RuleCreator;
 import com.github.stkurilin.routes.internal.TokenType;
 import com.github.stkurilin.routes.internal._RulesLexer;
 
