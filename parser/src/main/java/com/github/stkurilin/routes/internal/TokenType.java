@@ -18,6 +18,7 @@ public enum TokenType {
     ARGS_START,
     ARGS_END,
     ARG,
+    ARG_SEPARATOR,
     BAD_CHARACTER,
     WHITE_SPACE
 }

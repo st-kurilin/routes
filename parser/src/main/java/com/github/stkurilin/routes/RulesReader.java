@@ -48,6 +48,7 @@ public final class RulesReader {
                 case ARGS_END:
                 case MATCHER_START:
                 case MATCHER_END:
+                case ARG_SEPARATOR:
                     break;
                 case IMPORT_CLASS:
                     try {
