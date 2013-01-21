@@ -62,6 +62,12 @@ public class RulesReaderTest {
         check(Method.Get, uriSpec(literal("foo")), Foo.class, "foo", new ArrayList<String>());
     }
 
+    @Test
+    public void testSingleArg() throws Exception {
+        read("GET /foo/{id} com.github.stkurilin.routes.Foo#foo(id)");
+        check(Method.Get, uriSpec(literal("foo"), matcher("id")), Foo.class, "foo", of("id"));
+    }
+
     private void check(Method method, UriSpecMatcher uriSpec, Class<?> clazz, String methodId, List<String> args) {
         verify(ruleCreator).apply(eq(method), argThat(uriSpec), eq(clazz), eq(methodId), eq(args));
     }

@@ -25,7 +25,7 @@ public final class RulesReader {
         ArrayList<UriSpec.Item> items = new ArrayList<UriSpec.Item>();
         Class<? extends Object> clazz = null;
         String methodId = null;
-        List<String> args = null;
+        List<String> args = new ArrayList<String>();
         final ArrayList<Rule> result = new ArrayList<Rule>();
         final _RulesLexer lexer = new _RulesLexer(source);
         while (lexer.hasNext()) {
@@ -35,6 +35,7 @@ public final class RulesReader {
             if (tokenType == null && method != null) {
                 build(method, items, clazz, methodId, args, result);
                 items = new ArrayList<UriSpec.Item>();
+                args = new ArrayList<String>();
                 method = null;
                 continue;
             }
@@ -55,10 +56,14 @@ public final class RulesReader {
                     } catch (ClassNotFoundException e) {
                         throw new RuntimeException(e);
                     }
+                case ARG:
+                    args.add(text);
+                    break;
                 case ACTION:
                     if (method != null) {
                         build(method, items, clazz, methodId, args, result);
                         items = new ArrayList<UriSpec.Item>();
+                        args = new ArrayList<String>();
                         method = null;
                     }
                     args = new ArrayList<String>();

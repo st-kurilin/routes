@@ -17,6 +17,7 @@ public enum TokenType {
     METHOD_ID,
     ARGS_START,
     ARGS_END,
+    ARG,
     BAD_CHARACTER,
     WHITE_SPACE
 }
