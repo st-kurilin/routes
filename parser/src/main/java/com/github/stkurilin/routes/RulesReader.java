@@ -43,6 +43,8 @@ public final class RulesReader {
                 case IMPORT_KEYWORD:
                 case SLASH:
                 case WHITE_SPACE:
+                case ARGS_START:
+                case ARGS_END:
                 case MATCHER_START:
                 case MATCHER_END:
                     break;
@@ -78,7 +80,6 @@ public final class RulesReader {
                     break;
                 case BAD_CHARACTER:
                     throw new RuntimeException(String.format("Error while parsing >%s< on ", text));
-
                 default:
                     throw new AssertionError(tokenType);
             }
