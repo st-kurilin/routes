@@ -109,7 +109,7 @@ public final class RulesReader {
     }
 
     private Method method(String text) {
-        return Method.valueOf(uppercaseFirstLatter(text.toLowerCase()));
+        return Method.valueOf(text);
     }
 
     private Class<Object> findClass(String text) {
