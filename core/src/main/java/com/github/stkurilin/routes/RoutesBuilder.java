@@ -1,8 +1,6 @@
 package com.github.stkurilin.routes;
 
 import com.github.stkurilin.routes.internal.*;
-import com.github.stkurilin.routes.internal.Caller;
-import com.github.stkurilin.routes.internal.RuleMatcher;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,6 +28,11 @@ public class RoutesBuilder {
 
     public RoutesBuilder responseProducer(ResponseProducer responseProducer) {
         this.responseProducer = responseProducer;
+        return this;
+    }
+
+    public RoutesBuilder setRules(ArrayList<Rule> rules) {
+        this.rules = rules;
         return this;
     }
 

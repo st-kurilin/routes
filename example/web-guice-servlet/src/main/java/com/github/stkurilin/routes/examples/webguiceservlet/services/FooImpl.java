@@ -6,7 +6,7 @@ package com.github.stkurilin.routes.examples.webguiceservlet.services;
 class FooImpl implements Foo {
     @Override
     public String noArg() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return "noArg";
     }
 
     @Override

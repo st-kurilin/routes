@@ -32,46 +32,46 @@ public class RulesReaderTest {
     @Test
     public void testSimplestCase() {
         read("GET /foo com.github.stkurilin.routes.Foo#foo");
-        check(Method.Get, uriSpec(literal("foo")), Foo.class, "foo", new ArrayList<String>());
+        check(Method.GET, uriSpec(literal("foo")), Foo.class, "foo", new ArrayList<String>());
     }
 
     @Test
     public void testSeveralRules() {
         read("GET /foo com.github.stkurilin.routes.Foo#foo");
         read("GET /bar com.github.stkurilin.routes.Foo#bar");
-        check(Method.Get, uriSpec(literal("foo")), Foo.class, "foo", new ArrayList<String>());
-        check(Method.Get, uriSpec(literal("bar")), Foo.class, "bar", new ArrayList<String>());
+        check(Method.GET, uriSpec(literal("foo")), Foo.class, "foo", new ArrayList<String>());
+        check(Method.GET, uriSpec(literal("bar")), Foo.class, "bar", new ArrayList<String>());
     }
 
     @Test
     public void testImport() {
         read("import com.github.stkurilin.routes.Foo");
         read("GET /foo Foo#foo");
-        check(Method.Get, uriSpec(literal("foo")), Foo.class, "foo", new ArrayList<String>());
+        check(Method.GET, uriSpec(literal("foo")), Foo.class, "foo", new ArrayList<String>());
     }
 
     @Test
     public void testMatcher() {
         read("GET /foo/{id} com.github.stkurilin.routes.Foo#foo");
-        check(Method.Get, uriSpec(literal("foo"), matcher("id")), Foo.class, "foo", new ArrayList<String>());
+        check(Method.GET, uriSpec(literal("foo"), matcher("id")), Foo.class, "foo", new ArrayList<String>());
     }
 
     @Test
     public void testEmptyArgsDeclaration() {
         read("GET /foo/ com.github.stkurilin.routes.Foo#foo()");
-        check(Method.Get, uriSpec(literal("foo")), Foo.class, "foo", new ArrayList<String>());
+        check(Method.GET, uriSpec(literal("foo")), Foo.class, "foo", new ArrayList<String>());
     }
 
     @Test
     public void testSingleArg() {
         read("GET /foo/{id} com.github.stkurilin.routes.Foo#foo(id)");
-        check(Method.Get, uriSpec(literal("foo"), matcher("id")), Foo.class, "foo", of("id"));
+        check(Method.GET, uriSpec(literal("foo"), matcher("id")), Foo.class, "foo", of("id"));
     }
 
     @Test
     public void testSeveralArgs() {
         read("GET /foo/{year}/{month} com.github.stkurilin.routes.Foo#foo(year, month)");
-        check(Method.Get, uriSpec(literal("foo"), matcher("year"), matcher("month")), Foo.class, "foo", of("year", "month"));
+        check(Method.GET, uriSpec(literal("foo"), matcher("year"), matcher("month")), Foo.class, "foo", of("year", "month"));
     }
 
     private void check(Method method, UriSpecMatcher uriSpec, Class<?> clazz, String methodId, List<String> args) {

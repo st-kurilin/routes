@@ -1,10 +1,10 @@
 package com.github.stkurilin.routes.routes;
 
 
-import com.github.stkurilin.routes.Method;
-import com.github.stkurilin.routes.internal.Request;
-import com.github.stkurilin.routes.Rule;
 import com.github.stkurilin.routes.MatchResult;
+import com.github.stkurilin.routes.Method;
+import com.github.stkurilin.routes.Rule;
+import com.github.stkurilin.routes.internal.Request;
 import com.google.common.collect.ImmutableMap;
 import org.testng.annotations.Test;
 
@@ -20,29 +20,29 @@ import static org.testng.Assert.assertTrue;
 public class RuleTest {
     @Test
     public void testDontMatchOnUri() throws Exception {
-        final Rule rule = rule(Method.Get, of(literal("foo")));
-        final Request request = request(Method.Get, "/foobar");
+        final Rule rule = rule(Method.GET, of(literal("foo")));
+        final Request request = request(Method.GET, "/foobar");
         assertSkipped(rule.apply(request));
     }
 
     @Test
     public void testDontMatchOnMethod() throws Exception {
-        final Rule rule = rule(Method.Get, of(literal("foo")));
-        final Request request = request(Method.Post, "/foobar");
+        final Rule rule = rule(Method.GET, of(literal("foo")));
+        final Request request = request(Method.POST, "/foobar");
         assertSkipped(rule.apply(request));
     }
 
     @Test(dependsOnMethods = {"testDontMatchOnUri", "testDontMatchOnMethod"})
     public void testMatchingWithoutParams() throws Exception {
-        final Rule rule = rule(Method.Get, of(literal("foo")));
-        final Request request = request(Method.Get, "/foo");
+        final Rule rule = rule(Method.GET, of(literal("foo")));
+        final Request request = request(Method.GET, "/foo");
         assertMatched(rule.apply(request));
     }
 
     @Test(dependsOnMethods = "testMatchingWithoutParams")
     public void testRetrieveSimpleVal() throws Exception {
-        final Rule rule = rule(Method.Get, of(literal("foo"), matcher("id")));
-        final Request request = request(Method.Get, "/foo/2");
+        final Rule rule = rule(Method.GET, of(literal("foo"), matcher("id")));
+        final Request request = request(Method.GET, "/foo/2");
 
         assertTrue(rule.apply(request).apply(new MatchResult.MatchResultVisitor<Rule.MatchingRule, Boolean>() {
             @Override
@@ -59,8 +59,8 @@ public class RuleTest {
 
     @Test(dependsOnMethods = "testRetrieveSimpleVal")
     public void testRetrieveSeveralVal() {
-        final Rule rule = rule(Method.Get, of(literal("foo"), matcher("parent"), literal("bar"), matcher("child")));
-        final Request request = request(Method.Get, "/foo/22/bar/e");
+        final Rule rule = rule(Method.GET, of(literal("foo"), matcher("parent"), literal("bar"), matcher("child")));
+        final Request request = request(Method.GET, "/foo/22/bar/e");
 
         assertTrue(rule.apply(request).apply(new MatchResult.MatchResultVisitor<Rule.MatchingRule, Boolean>() {
             @Override
@@ -77,8 +77,8 @@ public class RuleTest {
 
     @Test(dependsOnMethods = "testRetrieveSimpleVal")
     public void testRetrieveValWithSlashed() {
-        final Rule rule = rule(Method.Get, of(literal("foo"), matcher("id")));
-        final Request request = request(Method.Get, "/foo/ho/bo");
+        final Rule rule = rule(Method.GET, of(literal("foo"), matcher("id")));
+        final Request request = request(Method.GET, "/foo/ho/bo");
 
         assertTrue(rule.apply(request).apply(new MatchResult.MatchResultVisitor<Rule.MatchingRule, Boolean>() {
             @Override
