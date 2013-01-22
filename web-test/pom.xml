@@ -9,23 +9,23 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>example</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>web</module>
-        <module>web-guice-servlet</module>
-        <module>web-guice</module>
-    </modules>
+    <artifactId>web-test</artifactId>
     <dependencies>
         <dependency>
-            <artifactId>web-test</artifactId>
+            <artifactId>core</artifactId>
             <groupId>com.github.stkurilin.routes</groupId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <artifactId>integration</artifactId>
-            <groupId>com.github.stkurilin.routes</groupId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mortbay.jetty</groupId>
+            <artifactId>jetty-servlet-tester</artifactId>
+            <version>6.1.26</version>
         </dependency>
     </dependencies>
 </project>
