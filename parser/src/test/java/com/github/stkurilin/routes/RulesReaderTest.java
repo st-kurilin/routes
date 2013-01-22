@@ -8,7 +8,9 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
+import static com.google.common.collect.ImmutableList.of;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -54,8 +56,25 @@ public class RulesReaderTest {
         check(Method.Get, uriSpec(literal("foo"), matcher("id")), Foo.class, "foo", new ArrayList<String>());
     }
 
+    @Test
+    public void testEmptyArgsDeclaration() {
+        read("GET /foo/ com.github.stkurilin.routes.Foo#foo()");
+        check(Method.Get, uriSpec(literal("foo")), Foo.class, "foo", new ArrayList<String>());
+    }
 
-    private void check(Method method, UriSpecMatcher uriSpec, Class<?> clazz, String methodId, ArrayList<String> args) {
+    @Test
+    public void testSingleArg() {
+        read("GET /foo/{id} com.github.stkurilin.routes.Foo#foo(id)");
+        check(Method.Get, uriSpec(literal("foo"), matcher("id")), Foo.class, "foo", of("id"));
+    }
+
+    @Test
+    public void testSeveralArgs() {
+        read("GET /foo/{year}/{month} com.github.stkurilin.routes.Foo#foo(year, month)");
+        check(Method.Get, uriSpec(literal("foo"), matcher("year"), matcher("month")), Foo.class, "foo", of("year", "month"));
+    }
+
+    private void check(Method method, UriSpecMatcher uriSpec, Class<?> clazz, String methodId, List<String> args) {
         verify(ruleCreator).apply(eq(method), argThat(uriSpec), eq(clazz), eq(methodId), eq(args));
     }
 

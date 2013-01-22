@@ -15,6 +15,10 @@ public enum TokenType {
     INSTANCE_ID,
     INSTANCE_METHOD_SEPARATOR,
     METHOD_ID,
+    ARGS_START,
+    ARGS_END,
+    ARG,
+    ARG_SEPARATOR,
     BAD_CHARACTER,
     WHITE_SPACE
 }
