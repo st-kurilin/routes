@@ -20,6 +20,10 @@ public final class RulesReader {
         this.ruleCreator = ruleCreator;
     }
 
+    public RulesReader() {
+        this(new RuleCreator());
+    }
+
     public Iterable<Rule> apply(Reader source) {
         Method method = null;  //start rule
         ArrayList<UriSpec.Item> items = new ArrayList<UriSpec.Item>();

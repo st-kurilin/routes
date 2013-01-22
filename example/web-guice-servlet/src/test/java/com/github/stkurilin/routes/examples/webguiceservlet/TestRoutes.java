@@ -32,4 +32,14 @@ public class TestRoutes {
     public void test() {
         assertEquals(integrationVerifier.retrieve(Method.GET, "/bb", ""), "noArg");
     }
+
+    @Test
+    public void testPostWithArg() {
+        assertEquals(integrationVerifier.retrieve(Method.POST, "/foo/vano", ""), "FooImpl: oneArg (vano)");
+    }
+
+    @Test
+    public void testRoutingsUsingFile() throws Exception {
+        assertEquals(integrationVerifier.retrieve(Method.GET, "/fff/vano", ""), "FooImpl: oneArg (vano)");
+    }
 }

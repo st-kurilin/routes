@@ -6,6 +6,7 @@ import com.google.inject.Provider;
 import com.google.inject.servlet.ServletModule;
 
 import java.io.File;
+import java.io.InputStreamReader;
 
 /**
  * @author Stanislav  Kurilin
@@ -36,6 +37,15 @@ public abstract class RoutesServletModule extends ServletModule {
         return routesBuilder.put(url);
     }
 
+    public void fromFile(String s) {
+        routesBuilder.from(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(s)));
+    }
+
+
+    public void fromFile(File s) {
+        routesBuilder.fromFile(s);
+    }
+
     @Override
     protected final void configureServlets() {
         configureRoutes();
@@ -50,11 +60,4 @@ public abstract class RoutesServletModule extends ServletModule {
     }
 
 
-    public RoutesServletModule fromFile(String s) {
-        return this;
-    }
-
-    public RoutesServletModule fromFile(File s) {
-        return this;
-    }
 }

@@ -16,7 +16,7 @@ public final class UriSpecFromString {
                 for (String part : uri.split("/")) {
                     if (part.isEmpty()) continue;
                     if (part.startsWith("{")) {
-                        res.add(new UriSpec.Matcher(part.substring(0, part.length() - 1)));
+                        res.add(new UriSpec.Matcher(part.substring(1, part.length() - 1)));
                     } else {
                         res.add(new Literal(part));
                     }

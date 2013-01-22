@@ -11,7 +11,7 @@ class FooImpl implements Foo {
 
     @Override
     public String oneArg(String arg) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return String.format("%s: oneArg (%s)", FooImpl.class.getSimpleName(), arg);
     }
 
     @Override
