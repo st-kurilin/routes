@@ -61,6 +61,10 @@ class HRoutesBuilder {
         }
     }
 
+    public void load(String resource) {
+        for (Rule each : rulesReader.apply(resource)) rules.add(each);
+    }
+
     public void from(InputStreamReader reader) {
         for (Rule each : rulesReader.apply(reader)) rules.add(each);
     }

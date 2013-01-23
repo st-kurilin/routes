@@ -37,8 +37,8 @@ public abstract class RoutesServletModule extends ServletModule {
         return routesBuilder.put(url);
     }
 
-    public void fromFile(String s) {
-        routesBuilder.from(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(s)));
+    public void load(String s) {
+        routesBuilder.load(s);
     }
 
 

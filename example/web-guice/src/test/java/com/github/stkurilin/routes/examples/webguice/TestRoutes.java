@@ -1,9 +1,8 @@
-package com.github.stkurilin.routes.examples.webguiceservlet;
+package com.github.stkurilin.routes.examples.webguice;
 
 import com.github.stkurilin.routes.IntegrationVerifier;
 import com.github.stkurilin.routes.Method;
 import com.github.stkurilin.routes.servlet.RoutesFilter;
-import com.google.inject.servlet.GuiceFilter;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -19,7 +18,7 @@ public class TestRoutes {
     @BeforeMethod
     public void setUp() throws Exception {
         integrationVerifier = new IntegrationVerifier();
-        integrationVerifier.filter(GuiceFilter.class, "/*");
+        integrationVerifier.filter(RoutesFilter.class, "/*");
         integrationVerifier.listener(new Config());
     }
 

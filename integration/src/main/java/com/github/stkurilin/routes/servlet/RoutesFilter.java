@@ -16,7 +16,8 @@ public class RoutesFilter implements Filter {
     private static Routes routes;
 
     public static void initRoutes(Routes routes) {
-        if (RoutesFilter.routes != null) throw new RuntimeException("Several  rules sources not implemented yet");
+        if (routes != null && RoutesFilter.routes != null)
+            throw new RuntimeException("Several rules sources not implemented yet");
         RoutesFilter.routes = routes;
     }
 

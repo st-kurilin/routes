@@ -1,0 +1,3 @@
+import com.github.stkurilin.routes.examples.webguice.services.Foo
+
+GET /fff/{id} Foo#oneArg( id )

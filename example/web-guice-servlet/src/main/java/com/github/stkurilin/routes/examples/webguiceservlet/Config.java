@@ -27,7 +27,7 @@ public class Config extends GuiceServletContextListener {
                     protected void configureRoutes() {
                         get("/bb").to(Foo.class, "noArg");
                         post("/foo/{name}").to(Foo.class, "oneArg", "name");
-                        fromFile("./foo.routes");
+                        load("./foo.routes");
 //                        put("/bar/{id}").to(Foo.class, "twoArgs", "id", "'foo'");
 //                        delete("/bar/{id}").to(Foo.class, "oneArgWithMapping", "id");
                     }
