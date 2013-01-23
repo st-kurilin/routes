@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -38,7 +40,11 @@ public class IntegrationVerifier {
     }
 
     public void filter(Class<? extends Filter> filterClass, String mapping) {
-        tester.addFilter(filterClass, mapping, 0);
+        this.filter(filterClass, mapping, new HashMap<String, String>());
+    }
+
+    public void filter(Class<? extends Filter> filterClass, String mapping, Map<String, String> initParams) {
+        tester.addFilter(filterClass, mapping, 0).setInitParameters(initParams);
     }
 
     public void listener(ServletContextListener listener) {

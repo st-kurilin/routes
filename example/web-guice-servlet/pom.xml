@@ -13,7 +13,6 @@
 
     <packaging>war</packaging>
     <dependencies>
-
         <dependency>
             <artifactId>guice</artifactId>
             <groupId>com.google.inject</groupId>
@@ -24,6 +23,5 @@
             <groupId>com.google.inject.extensions</groupId>
             <version>3.0</version>
         </dependency>
-
     </dependencies>
 </project>

@@ -3,6 +3,7 @@ package com.github.stkurilin.routes;
 import com.github.stkurilin.routes.internal.TokenType;
 import com.github.stkurilin.routes.internal._RulesLexer;
 
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +23,11 @@ public final class RulesReader {
 
     public RulesReader() {
         this(new RuleCreator());
+    }
+
+    public Iterable<Rule> apply(String resource) {
+        return apply(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(resource)));
+
     }
 
     public Iterable<Rule> apply(Reader source) {

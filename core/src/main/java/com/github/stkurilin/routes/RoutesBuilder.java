@@ -4,10 +4,27 @@ import com.github.stkurilin.routes.internal.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RoutesBuilder {
     private Invoker invoker = new InvokerWithMapping(Collections.<Class<?>, Transformer<?>>emptyMap());
-    private InstanceFinder instanceFinder;
+    private InstanceFinder instanceFinder = new InstanceFinder() {
+        final Map<Class<?>, Object> instancies = new HashMap<Class<?>, Object>();
+
+        @Override
+        public Object apply(Class<?> instanceClass) {
+            if (!instancies.containsKey(instanceClass))
+                try {
+                    instancies.put(instanceClass, instanceClass.newInstance());
+                } catch (InstantiationException e) {
+                    throw new RuntimeException(e);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            return instancies.get(instanceClass);
+        }
+    };
     private ArrayList<Rule> rules = new ArrayList<Rule>();
     private ResponseProducer responseProducer = new ResponseProducer() {
         @Override
@@ -31,8 +48,8 @@ public class RoutesBuilder {
         return this;
     }
 
-    public RoutesBuilder setRules(ArrayList<Rule> rules) {
-        this.rules = rules;
+    public RoutesBuilder setRules(Iterable<Rule> rules) {
+        for (Rule rule : rules) addRule(rule);
         return this;
     }
 

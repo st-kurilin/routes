@@ -1,9 +1,8 @@
 package com.github.stkurilin.routes.servlet;
 
-import com.github.stkurilin.routes.MatchResult;
-import com.github.stkurilin.routes.Method;
-import com.github.stkurilin.routes.Routes;
-import com.github.stkurilin.routes.internal.*;
+import com.github.stkurilin.routes.*;
+import com.github.stkurilin.routes.internal.Request;
+import com.github.stkurilin.routes.internal.Response;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -17,11 +16,14 @@ public class RoutesFilter implements Filter {
     private static Routes routes;
 
     public static void initRoutes(Routes routes) {
+        if (RoutesFilter.routes != null) throw new RuntimeException("Several  rules sources not implemented yet");
         RoutesFilter.routes = routes;
     }
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+        final String config = filterConfig.getInitParameter("config");
+        if (config != null) initRoutes(new RoutesBuilder().setRules(new RulesReader().apply(config)).build());
     }
 
     @Override

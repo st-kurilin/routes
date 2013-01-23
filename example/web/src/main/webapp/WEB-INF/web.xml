@@ -7,10 +7,12 @@
     <filter>
         <filter-name>routesFilter</filter-name>
         <filter-class>com.github.stkurilin.routes.servlet.RoutesFilter</filter-class>
+        <init-param>
+            <param-name>config</param-name>
+            <param-value>routes/config.routes</param-value>
+        </init-param>
     </filter>
-    <listener>
-        <listener-class>com.github.stkurilin.routes.examples.webguice.Config</listener-class>
-    </listener>
+
     <filter-mapping>
         <filter-name>routesFilter</filter-name>
         <url-pattern>/*</url-pattern>
