@@ -2,13 +2,12 @@ package com.github.stkurilin.routes;
 
 import com.github.stkurilin.routes.internal.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class RoutesBuilder {
-    private Invoker invoker = new InvokerWithMapping(Collections.<Class<?>, Transformer<?>>emptyMap());
+    private Invoker invoker = new InvokerWithMapping(new HashSet<Retriever>(){{
+        add(Retriever.DEFAULT);
+    }});
     private InstanceFinder instanceFinder = new InstanceFinder() {
         final Map<Class<?>, Object> instancies = new HashMap<Class<?>, Object>();
 

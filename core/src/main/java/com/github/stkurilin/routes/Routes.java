@@ -21,16 +21,16 @@ public class Routes implements Matcher<Request, Response> {
     }
 
     @Override
-    public MatchResult<Response> apply(final Request request) {
+    public MatchResult<Response> apply(final Request input) {
         return ruleMatcher
-                .apply(request)
+                .apply(input)
                 .apply(new MatchResult.MatchResultVisitor<Rule.MatchingRule, MatchResult<Response>>() {
                     @Override
                     public MatchResult<Response> matched(Rule.MatchingRule appliedRule) {
                         return MatchResult.matched(responseProducer.apply(
                                 appliedRule,
                                 caller.apply(appliedRule.getTargetSpec(),
-                                        inputsCollector.apply(request, appliedRule))));
+                                        inputsCollector.apply(input, appliedRule))));
                     }
 
                     @Override

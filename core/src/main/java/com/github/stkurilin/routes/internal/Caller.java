@@ -19,7 +19,7 @@ public class Caller {
         this.argumentsCollector = argumentsCollector;
     }
 
-    public Object apply(TargetSpec targetSpec, Map<String, String> availableInputs) {
+    public Object apply(TargetSpec targetSpec, Map<String, Object> availableInputs) {
         final JavaMethod targetMethod = JavaMethod.from(instanceFinder.apply(targetSpec.clazz()), targetSpec.methodId());
         return invoker.apply(targetMethod, argumentsCollector.apply(targetSpec, availableInputs));
     }

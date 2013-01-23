@@ -3,6 +3,6 @@ package com.github.stkurilin.routes.internal;
 /**
  * @author Stanislav  Kurilin
  */
-public interface Transformer<R> {
-    R apply(String input);
+public interface Transformer<F, T> {
+    T apply(F input);
 }

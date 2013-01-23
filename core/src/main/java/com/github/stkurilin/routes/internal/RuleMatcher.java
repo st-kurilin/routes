@@ -15,9 +15,9 @@ public class RuleMatcher implements Matcher<Request, Rule.MatchingRule> {
     }
 
     @Override
-    public MatchResult<Rule.MatchingRule> apply(Request request) {
+    public MatchResult<Rule.MatchingRule> apply(Request input) {
         for (Rule rule : iterable) {
-            final MatchResult<Rule.MatchingRule> matchResult = rule.apply(request);
+            final MatchResult<Rule.MatchingRule> matchResult = rule.apply(input);
             if (matchResult.apply(MatchResult.matchedPredicate())) {
                 return matchResult;
             }

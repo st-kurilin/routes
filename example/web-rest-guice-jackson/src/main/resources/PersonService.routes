@@ -1,0 +1,3 @@
+import com.github.stkurilin.routes.examples.webresetguicejackson.services.PersonService
+
+POST /persons PersonService#create(body)

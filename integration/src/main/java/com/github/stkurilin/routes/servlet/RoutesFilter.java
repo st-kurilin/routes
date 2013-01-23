@@ -8,6 +8,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author Stanislav  Kurilin
@@ -35,7 +36,9 @@ public class RoutesFilter implements Filter {
         if (routes == null) throw new RuntimeException("should be initialized");
         final HttpServletRequest req = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
+
         final MatchResult<Response> matchResult = routes.apply(new Request() {
+
             @Override
             public Method method() {
                 return Method.valueOf(req.getMethod());
@@ -44,6 +47,15 @@ public class RoutesFilter implements Filter {
             @Override
             public String path() {
                 return req.getPathInfo();
+            }
+
+            @Override
+            public InputStream content() {
+                try {
+                    return req.getInputStream();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         matchResult.apply(new MatchResult.MatchResultVisitor<Response, Void>() {
