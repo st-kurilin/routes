@@ -34,7 +34,7 @@ public class RoutesBuilder {
             };
         }
     };
-    private Set<Retriever> retrievers;
+    private Set<Retriever> retrievers = new HashSet<Retriever>();
 
     public RoutesBuilder instanceFinder(InstanceFinder instanceFinder) {
         this.instanceFinder = instanceFinder;
