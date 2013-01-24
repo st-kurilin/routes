@@ -2,7 +2,6 @@ package com.github.stkurilin.routes.examples.webresetguicejackson.dao;
 
 import com.github.stkurilin.routes.examples.webresetguicejackson.entity.Person;
 
-import javax.inject.Singleton;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -23,18 +22,27 @@ public class PersonDao {
         for (Person each : data)
             if (each.getId() == id)
                 return each;
-        throw new IllegalArgumentException();
+        return null;
     }
 
     public Person save(Person person) {
-        person.setId(generateId());
-        data.add(person);
-        return person;
+        if (person.isNew()) {
+            person.setId(generateId());
+            data.add(person);
+            return person;
+        } else {
+            data.add(person);//it will replace old instance since provides same hashCode
+            return person;
+        }
+    }
+
+    public void delete(long id) {
+        data.remove(find(id));
     }
 
     private synchronized long generateId() {
         long max = 0;
-        for(Person each : data) max = Math.max(each.getId(), max);
+        for (Person each : data) max = Math.max(each.getId(), max);
         return max + 1;
     }
 }

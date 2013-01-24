@@ -1,5 +1,7 @@
 package com.github.stkurilin.routes.examples.webresetguicejackson.entity;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 /**
  * @author Stanislav  Kurilin
  */
@@ -62,5 +64,10 @@ public class Person {
     @Override
     public int hashCode() {
         return (int) (id ^ (id >>> 32));
+    }
+
+    @JsonIgnore
+    public boolean isNew() {
+        return id == -1;
     }
 }

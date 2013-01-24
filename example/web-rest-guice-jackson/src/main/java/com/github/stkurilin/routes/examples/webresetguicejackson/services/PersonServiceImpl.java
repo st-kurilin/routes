@@ -27,7 +27,20 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public Person find(long id) {
+    public Person read(long id) {
         return dao.find(id);
+    }
+
+    @Override
+    public void update(long id, Person person) {
+        final Person loaded = dao.find(id);
+        loaded.setName(person.getName());
+        loaded.setAge(person.getAge());
+        dao.save(loaded);
+    }
+
+    @Override
+    public void delete(long id) {
+        dao.delete(id);
     }
 }

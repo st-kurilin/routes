@@ -8,5 +8,9 @@ import com.github.stkurilin.routes.examples.webresetguicejackson.entity.Person;
 public interface PersonService {
     long create(Person person);
 
-    Person find(long id);
+    Person read(long id);
+
+    void update(long id, Person person);
+
+    void delete(long id);
 }

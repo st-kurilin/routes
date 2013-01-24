@@ -1,4 +1,6 @@
 import com.github.stkurilin.routes.examples.webresetguicejackson.services.PersonService
 
 POST /persons PersonService#create(body)
-GET /persons/{id} PersonService#find(id)
+GET /persons/{id} PersonService#read(id)
+PUT /persons/{id} PersonService#update(id, body)
+DELETE /persons/{id} PersonService#delete(id)
