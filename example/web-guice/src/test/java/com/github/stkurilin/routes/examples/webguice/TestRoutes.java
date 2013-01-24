@@ -10,6 +10,10 @@ import static org.testng.Assert.assertEquals;
  * @author Stanislav  Kurilin
  */
 public class TestRoutes extends AbstractRoutesTest {
+    public TestRoutes() {
+        super("/webguice");
+    }
+
     @Override
     protected void init() {
         filter(RoutesFilter.class, "/*");
@@ -18,16 +22,16 @@ public class TestRoutes extends AbstractRoutesTest {
 
     @Test
     public void test() {
-        assertEquals(get("/bb"), "noArg");
+        assertEquals(get("/webguice/bb"), "noArg");
     }
 
     @Test
     public void testPostWithArg() {
-        assertEquals(post("/foo/vano", ""), "FooImpl: oneArg (vano)");
+        assertEquals(post("/webguice/foo/vano", ""), "FooImpl: oneArg (vano)");
     }
 
     @Test
     public void testRoutingsUsingFile() throws Exception {
-        assertEquals(get("/fff/vano"), "FooImpl: oneArg (vano)");
+        assertEquals(get("/webguice/fff/vano"), "FooImpl: oneArg (vano)");
     }
 }

@@ -20,6 +20,7 @@ import java.util.Map;
  * @author Stanislav  Kurilin
  */
 public abstract class AbstractRoutesTest {
+    protected final String contextPath;
     {
         System.setProperty("DEBUG", "true");
     }
@@ -28,10 +29,13 @@ public abstract class AbstractRoutesTest {
     private HttpTester request;
     private HttpTester response;
 
-    public AbstractRoutesTest() {
-
+    protected AbstractRoutesTest(String contextPath) {
+        this.contextPath = contextPath;
     }
 
+    protected AbstractRoutesTest() {
+        this("/");
+    }
 
     protected void filter(Class<? extends Filter> filterClass, String mapping) {
         this.filter(filterClass, mapping, new HashMap<String, String>());
@@ -86,7 +90,7 @@ public abstract class AbstractRoutesTest {
     public final void setUp() throws Exception {
         RoutesFilter.initRoutes(null);
         tester = new ServletTester();
-        this.tester.setContextPath("/");
+        this.tester.setContextPath(contextPath);
         this.tester.addServlet(FakeServlet.class, "/*");
         this.request = new HttpTester();
         this.request.setHeader("Host", "tester");
