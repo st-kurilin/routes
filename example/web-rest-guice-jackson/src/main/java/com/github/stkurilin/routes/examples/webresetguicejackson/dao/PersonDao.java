@@ -2,6 +2,7 @@ package com.github.stkurilin.routes.examples.webresetguicejackson.dao;
 
 import com.github.stkurilin.routes.examples.webresetguicejackson.entity.Person;
 
+import javax.inject.Singleton;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -27,10 +28,13 @@ public class PersonDao {
 
     public Person save(Person person) {
         person.setId(generateId());
+        data.add(person);
         return person;
     }
 
-    private long generateId() {
-        return random.nextInt();
+    private synchronized long generateId() {
+        long max = 0;
+        for(Person each : data) max = Math.max(each.getId(), max);
+        return max + 1;
     }
 }

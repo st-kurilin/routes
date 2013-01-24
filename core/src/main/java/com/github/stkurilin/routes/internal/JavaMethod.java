@@ -40,6 +40,7 @@ public class JavaMethod {
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         } catch (InvocationTargetException e) {
+            e.getCause().printStackTrace();
             throw new RuntimeException(e);
         }
 

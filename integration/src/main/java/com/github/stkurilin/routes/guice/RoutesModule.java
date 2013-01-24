@@ -1,6 +1,8 @@
 package com.github.stkurilin.routes.guice;
 
 import com.github.stkurilin.routes.RuleFromStringFormBuilder;
+import com.github.stkurilin.routes.internal.ResponseProducer;
+import com.github.stkurilin.routes.internal.Retriever;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provider;
 
@@ -47,5 +49,12 @@ public abstract class RoutesModule extends AbstractModule {
 
     public void fromFile(File s) {
         routesBuilder.fromFile(s);
+    }
+    public void deserializer(Retriever retriever){
+        routesBuilder.retriever(retriever);
+    }
+
+    public void serializer(ResponseProducer producer) {
+        routesBuilder.responseProducer(producer);
     }
 }

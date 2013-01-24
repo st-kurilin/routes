@@ -5,9 +5,7 @@ import com.github.stkurilin.routes.internal.*;
 import java.util.*;
 
 public class RoutesBuilder {
-    private Invoker invoker = new InvokerWithMapping(new HashSet<Retriever>(){{
-        add(Retriever.DEFAULT);
-    }});
+    private Invoker invoker;
     private InstanceFinder instanceFinder = new InstanceFinder() {
         final Map<Class<?>, Object> instancies = new HashMap<Class<?>, Object>();
 
@@ -36,6 +34,7 @@ public class RoutesBuilder {
             };
         }
     };
+    private Set<Retriever> retrievers;
 
     public RoutesBuilder instanceFinder(InstanceFinder instanceFinder) {
         this.instanceFinder = instanceFinder;
@@ -59,7 +58,16 @@ public class RoutesBuilder {
 
 
     public Routes build() {
+        invoker= new InvokerWithMapping(new HashSet<Retriever>(){{
+            addAll(retrievers);
+            add(Retriever.DEFAULT);
+        }});
         return new Routes(new RuleMatcher(rules), new InputsCollector(), new Caller(invoker, instanceFinder, new ArgumentsCollector()), responseProducer);
     }
 
+
+    public RoutesBuilder setRetrievers(Set<Retriever> retrievers) {
+        this.retrievers = retrievers;
+        return this;
+    }
 }

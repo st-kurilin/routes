@@ -12,5 +12,5 @@ public interface Request {
 
     String path();
 
-    InputStream content();
+    String content();
 }

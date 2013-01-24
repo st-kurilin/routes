@@ -8,7 +8,6 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * @author Stanislav  Kurilin
@@ -50,12 +49,17 @@ public class RoutesFilter implements Filter {
             }
 
             @Override
-            public InputStream content() {
+            public String content() {
                 try {
-                    return req.getInputStream();
+                    return convertStreamToString(req.getInputStream());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
+            }
+
+            private String convertStreamToString(java.io.InputStream is) {
+                java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+                return s.hasNext() ? s.next() : "";
             }
         });
         matchResult.apply(new MatchResult.MatchResultVisitor<Response, Void>() {

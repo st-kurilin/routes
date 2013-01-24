@@ -4,11 +4,13 @@ import com.github.stkurilin.routes.examples.webresetguicejackson.dao.PersonDao;
 import com.github.stkurilin.routes.examples.webresetguicejackson.entity.Person;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * @author Stanislav  Kurilin
  */
-class PersonServiceImpl implements PersonService {
+@Singleton
+public class PersonServiceImpl implements PersonService {
 
     private final PersonDao dao;
 
