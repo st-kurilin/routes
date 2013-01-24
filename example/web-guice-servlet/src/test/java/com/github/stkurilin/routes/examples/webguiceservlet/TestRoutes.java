@@ -1,11 +1,7 @@
 package com.github.stkurilin.routes.examples.webguiceservlet;
 
-import com.github.stkurilin.routes.IntegrationVerifier;
-import com.github.stkurilin.routes.Method;
-import com.github.stkurilin.routes.servlet.RoutesFilter;
+import com.github.stkurilin.routes.AbstractRoutesTest;
 import com.google.inject.servlet.GuiceFilter;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
@@ -13,34 +9,25 @@ import static org.testng.Assert.assertEquals;
 /**
  * @author Stanislav  Kurilin
  */
-public class TestRoutes {
-    private IntegrationVerifier integrationVerifier;
-
-    @BeforeMethod
-    public void setUp() throws Exception {
-        integrationVerifier = new IntegrationVerifier();
-        integrationVerifier.filter(GuiceFilter.class, "/*");
-        integrationVerifier.listener(new Config());
-    }
-
-    @AfterMethod
-    public void tearDown() {
-        integrationVerifier.end();
-        RoutesFilter.initRoutes(null);
+public class TestRoutes extends AbstractRoutesTest {
+    @Override
+    protected void init() {
+        filter(GuiceFilter.class, "/*");
+        listener(new Config());
     }
 
     @Test
     public void test() {
-        assertEquals(integrationVerifier.retrieve(Method.GET, "/bb", ""), "noArg");
+        assertEquals(get("/bb"), "noArg");
     }
 
     @Test
     public void testPostWithArg() {
-        assertEquals(integrationVerifier.retrieve(Method.POST, "/foo/vano", ""), "FooImpl: oneArg (vano)");
+        assertEquals(post("/foo/vano", ""), "FooImpl: oneArg (vano)");
     }
 
     @Test
     public void testRoutingsUsingFile() throws Exception {
-        assertEquals(integrationVerifier.retrieve(Method.GET, "/fff/vano", ""), "FooImpl: oneArg (vano)");
+        assertEquals(get("/fff/vano"), "FooImpl: oneArg (vano)");
     }
 }
