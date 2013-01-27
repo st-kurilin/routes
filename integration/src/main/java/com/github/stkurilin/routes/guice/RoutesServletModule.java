@@ -36,6 +36,15 @@ public abstract class RoutesServletModule extends ServletModule {
         return routesBuilder.put(url);
     }
 
+    public void load(String s) {
+        routesBuilder.load(s);
+    }
+
+
+    public void fromFile(File s) {
+        routesBuilder.fromFile(s);
+    }
+
     @Override
     protected final void configureServlets() {
         configureRoutes();
@@ -50,11 +59,4 @@ public abstract class RoutesServletModule extends ServletModule {
     }
 
 
-    public RoutesServletModule fromFile(String s) {
-        return this;
-    }
-
-    public RoutesServletModule fromFile(File s) {
-        return this;
-    }
 }

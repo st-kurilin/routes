@@ -35,6 +35,6 @@ public class RuleFromStringFormBuilder {
             public Iterable<String> args() {
                 return Arrays.asList(args);
             }
-        }));
+        }, "")); //todo
     }
 }

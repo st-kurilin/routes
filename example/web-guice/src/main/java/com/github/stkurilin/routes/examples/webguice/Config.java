@@ -3,6 +3,7 @@ package com.github.stkurilin.routes.examples.webguice;
 import com.github.stkurilin.routes.examples.webguice.services.Foo;
 import com.github.stkurilin.routes.examples.webguice.services.ServicesModule;
 import com.github.stkurilin.routes.guice.RoutesModule;
+import com.github.stkurilin.routes.serializers.VelocityProducer;
 import com.google.inject.Guice;
 
 import javax.servlet.ServletContextEvent;
@@ -17,10 +18,10 @@ public class Config implements ServletContextListener {
         Guice.createInjector(new ServicesModule(), new RoutesModule() {
             @Override
             protected void configureRoutes() {
-                get("/foo/{name}").to(Foo.class, "oneArg", "name");
-                put("/bar/doit").to(Foo.class, "noArg");
-                delete("/bar/{id}").to(Foo.class, "oneArgWithMapping", "id");
-                post("/bar/{id}").to(Foo.class, "twoArgs", "id", "'foo'");
+                get("/bb").to(Foo.class, "noArg");
+                post("/foo/{name}").to(Foo.class, "oneArg", "name");
+                load("./foo.routes");
+                serializer(new VelocityProducer());
             }
         });
     }

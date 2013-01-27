@@ -3,6 +3,7 @@ package com.github.stkurilin.routes;
 import com.github.stkurilin.routes.internal.TokenType;
 import com.github.stkurilin.routes.internal._RulesLexer;
 
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,11 +21,21 @@ public final class RulesReader {
         this.ruleCreator = ruleCreator;
     }
 
+    public RulesReader() {
+        this(new RuleCreator());
+    }
+
+    public Iterable<Rule> apply(String resource) {
+        return apply(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(resource)));
+
+    }
+
     public Iterable<Rule> apply(Reader source) {
         Method method = null;  //start rule
         ArrayList<UriSpec.Item> items = new ArrayList<UriSpec.Item>();
         Class<? extends Object> clazz = null;
         String methodId = null;
+        String template = null;
         List<String> args = new ArrayList<String>();
         final ArrayList<Rule> result = new ArrayList<Rule>();
         final _RulesLexer lexer = new _RulesLexer(source);
@@ -33,10 +44,11 @@ public final class RulesReader {
             final String text = lexer.yytext();
             System.out.println(String.format("%s:%s", tokenType, text));
             if (tokenType == null && method != null) {
-                build(method, items, clazz, methodId, args, result);
+                build(method, items, clazz, methodId, args, result, template);
                 items = new ArrayList<UriSpec.Item>();
                 args = new ArrayList<String>();
                 method = null;
+                template = null;
                 continue;
             }
             if (tokenType == null) continue;
@@ -62,10 +74,11 @@ public final class RulesReader {
                     break;
                 case ACTION:
                     if (method != null) {
-                        build(method, items, clazz, methodId, args, result);
+                        build(method, items, clazz, methodId, args, result, template);
                         items = new ArrayList<UriSpec.Item>();
                         args = new ArrayList<String>();
                         method = null;
+                        template = null;
                     }
                     args = new ArrayList<String>();
                     method = method(text);
@@ -84,6 +97,9 @@ public final class RulesReader {
                 case METHOD_ID:
                     methodId = text;
                     break;
+                case TEMPLATE:
+                    template = text;
+                    break;
                 case BAD_CHARACTER:
                     throw new RuntimeException(String.format("Error while parsing >%s< on ", text));
                 default:
@@ -95,13 +111,30 @@ public final class RulesReader {
         return result;
     }
 
-    private void build(Method method, final ArrayList<UriSpec.Item> items, Class<? extends Object> clazz, String methodId, List<String> args, ArrayList<Rule> result) {
+    private void build(Method method, final ArrayList<UriSpec.Item> items, final Class<? extends Object> clazz, final String methodId, final List<String> args, ArrayList<Rule> result, String template) {
         result.add(ruleCreator.apply(method, new UriSpec() {
-            @Override
-            public Iterable<Item> path() {
-                return items;
-            }
-        }, clazz, methodId, args));
+                    @Override
+                    public Iterable<Item> path() {
+                        return items;
+                    }
+                }, new TargetSpec() {
+                    @Override
+                    public Class<? extends Object> clazz() {
+                        return clazz;
+                    }
+
+                    @Override
+                    public String methodId() {
+                        return methodId;
+                    }
+
+                    @Override
+                    public Iterable<String> args() {
+                        return args;
+                    }
+                },
+                template
+        ));
     }
 
     private String shortFormPart(String text) {
@@ -109,7 +142,7 @@ public final class RulesReader {
     }
 
     private Method method(String text) {
-        return Method.valueOf(uppercaseFirstLatter(text.toLowerCase()));
+        return Method.valueOf(text);
     }
 
     private Class<Object> findClass(String text) {

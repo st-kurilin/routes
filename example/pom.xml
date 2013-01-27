@@ -15,5 +15,18 @@
         <module>web</module>
         <module>web-guice-servlet</module>
         <module>web-guice</module>
+        <module>web-rest-guice-jackson</module>
     </modules>
+    <dependencies>
+        <dependency>
+            <artifactId>web-test</artifactId>
+            <groupId>com.github.stkurilin.routes</groupId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <artifactId>integration</artifactId>
+            <groupId>com.github.stkurilin.routes</groupId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 </project>

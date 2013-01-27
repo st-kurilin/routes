@@ -6,12 +6,12 @@ package com.github.stkurilin.routes.examples.webguice.services;
 class FooImpl implements Foo {
     @Override
     public String noArg() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return "noArg";
     }
 
     @Override
     public String oneArg(String arg) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return String.format("%s: oneArg (%s)", FooImpl.class.getSimpleName(), arg);
     }
 
     @Override

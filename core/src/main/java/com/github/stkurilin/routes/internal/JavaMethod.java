@@ -35,10 +35,12 @@ public class JavaMethod {
 
     public Object apply(List<? extends Object> args) {
         try {
+            method.setAccessible(true);
             return method.invoke(instance, args.toArray());
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         } catch (InvocationTargetException e) {
+            e.getCause().printStackTrace();
             throw new RuntimeException(e);
         }
 

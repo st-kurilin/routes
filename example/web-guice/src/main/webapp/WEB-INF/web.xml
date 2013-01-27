@@ -11,6 +11,7 @@
     <listener>
         <listener-class>com.github.stkurilin.routes.examples.webguice.Config</listener-class>
     </listener>
+
     <filter-mapping>
         <filter-name>routesFilter</filter-name>
         <url-pattern>/*</url-pattern>

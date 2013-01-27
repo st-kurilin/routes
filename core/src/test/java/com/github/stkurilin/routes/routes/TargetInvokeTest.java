@@ -1,7 +1,7 @@
 package com.github.stkurilin.routes.routes;
 
 import com.github.stkurilin.routes.*;
-import com.github.stkurilin.routes.internal.*;
+import com.github.stkurilin.routes.internal.InstanceFinder;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
@@ -39,7 +39,7 @@ public class TargetInvokeTest {
                 .addRule(rule(of(literal("bar1")), targetSpec))
                 .build();
 
-        routes.apply(request(Method.Get, "/bar1"));
+        routes.apply(request(Method.GET, "/bar1"));
 
         verify(mock).foo1();
     }
@@ -59,7 +59,7 @@ public class TargetInvokeTest {
                 .addRule(rule(of(literal("bar2"), matcher("id")), targetSpec))
                 .build();
 
-        routes.apply(request(Method.Get, "/bar2/2"));
+        routes.apply(request(Method.GET, "/bar2/2"));
 
         verify(mock).foo2("2");
     }
@@ -68,7 +68,7 @@ public class TargetInvokeTest {
         final UriSpec uriSpec = mock(UriSpec.class);
         when(uriSpec.path()).thenReturn(items);
 
-        return new RuleCreator().apply(Method.Get, uriSpec, mock);
+        return new RuleCreator().apply(Method.GET, uriSpec, mock, "");
     }
 
 }

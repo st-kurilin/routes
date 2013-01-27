@@ -13,6 +13,7 @@
         <module>parser</module>
         <module>integration</module>
         <module>example</module>
+        <module>web-test</module>
     </modules>
     <dependencies>
         <dependency>

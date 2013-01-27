@@ -1,0 +1,1 @@
+GET /foo/{arg} com.github.stkurilin.routes.examples.web.Foo#bar(arg)

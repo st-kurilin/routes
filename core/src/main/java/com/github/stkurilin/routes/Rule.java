@@ -9,14 +9,20 @@ import java.util.Map;
  */
 public interface Rule {
     MatchResult<MatchingRule> apply(Request input);
+
     TargetSpec targetSpec();
+
+    String template();
+
     class MatchingRule {
         private final TargetSpec targetSpec;
         private final Map<String, String> retrieved;
+        private final String template;
 
-        public MatchingRule(TargetSpec targetSpec, Map<String, String> retrieved) {
+        public MatchingRule(TargetSpec targetSpec, Map<String, String> retrieved, String template) {
             this.targetSpec = targetSpec;
             this.retrieved = retrieved;
+            this.template = template;
         }
 
         public TargetSpec getTargetSpec() {
@@ -25,6 +31,10 @@ public interface Rule {
 
         public Map<String, String> getRetrieved() {
             return retrieved;
+        }
+
+        public String getTemplate() {
+            return template == null ? "" : template;//todo
         }
     }
 }

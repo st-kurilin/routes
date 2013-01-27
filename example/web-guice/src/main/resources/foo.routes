@@ -1,0 +1,5 @@
+import com.github.stkurilin.routes.examples.webguice.services.Foo
+
+GET /template/{id} Foo#oneArg( id ) foo.vm
+GET /fff/{id} Foo#oneArg( id )
+

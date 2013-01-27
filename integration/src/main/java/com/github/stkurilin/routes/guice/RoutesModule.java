@@ -1,7 +1,10 @@
 package com.github.stkurilin.routes.guice;
 
 import com.github.stkurilin.routes.RuleFromStringFormBuilder;
+import com.github.stkurilin.routes.internal.ResponseProducer;
+import com.github.stkurilin.routes.internal.Retriever;
 import com.google.inject.AbstractModule;
+import com.google.inject.Provider;
 
 import java.io.File;
 
@@ -14,6 +17,12 @@ public abstract class RoutesModule extends AbstractModule {
     @Override
     protected final void configure() {
         configureRoutes();
+        routesBuilder.build(new HRoutesBuilder.AProvider() {
+            @Override
+            public Provider<?> provider(Class<?> clazz) {
+                return getProvider(clazz);
+            }
+        });
     }
 
     protected abstract void configureRoutes();
@@ -34,11 +43,19 @@ public abstract class RoutesModule extends AbstractModule {
         return routesBuilder.put(url);
     }
 
-    public RoutesServletModule fromFile(String s) {
-        return null;
+    public void load(String s) {
+        routesBuilder.load(s);
     }
 
-    public RoutesServletModule fromFile(File s) {
-        return null;
+    public void fromFile(File s) {
+        routesBuilder.fromFile(s);
+    }
+
+    public void deserializer(Retriever retriever) {
+        routesBuilder.retriever(retriever);
+    }
+
+    public void serializer(ResponseProducer producer) {
+        routesBuilder.responseProducer(producer);
     }
 }

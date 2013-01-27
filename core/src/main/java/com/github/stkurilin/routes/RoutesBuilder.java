@@ -1,15 +1,27 @@
 package com.github.stkurilin.routes;
 
 import com.github.stkurilin.routes.internal.*;
-import com.github.stkurilin.routes.internal.Caller;
-import com.github.stkurilin.routes.internal.RuleMatcher;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 
 public class RoutesBuilder {
-    private Invoker invoker = new InvokerWithMapping(Collections.<Class<?>, Transformer<?>>emptyMap());
-    private InstanceFinder instanceFinder;
+    private Invoker invoker;
+    private InstanceFinder instanceFinder = new InstanceFinder() {
+        final Map<Class<?>, Object> instancies = new HashMap<Class<?>, Object>();
+
+        @Override
+        public Object apply(Class<?> instanceClass) {
+            if (!instancies.containsKey(instanceClass))
+                try {
+                    instancies.put(instanceClass, instanceClass.newInstance());
+                } catch (InstantiationException e) {
+                    throw new RuntimeException(e);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            return instancies.get(instanceClass);
+        }
+    };
     private ArrayList<Rule> rules = new ArrayList<Rule>();
     private ResponseProducer responseProducer = new ResponseProducer() {
         @Override
@@ -22,6 +34,7 @@ public class RoutesBuilder {
             };
         }
     };
+    private Set<Retriever> retrievers = new HashSet<Retriever>();
 
     public RoutesBuilder instanceFinder(InstanceFinder instanceFinder) {
         this.instanceFinder = instanceFinder;
@@ -33,6 +46,11 @@ public class RoutesBuilder {
         return this;
     }
 
+    public RoutesBuilder setRules(Iterable<Rule> rules) {
+        for (Rule rule : rules) addRule(rule);
+        return this;
+    }
+
     public RoutesBuilder addRule(Rule rule) {
         rules.add(rule);
         return this;
@@ -40,7 +58,16 @@ public class RoutesBuilder {
 
 
     public Routes build() {
+        invoker = new InvokerWithMapping(new HashSet<Retriever>() {{
+            addAll(retrievers);
+            add(Retriever.DEFAULT);
+        }});
         return new Routes(new RuleMatcher(rules), new InputsCollector(), new Caller(invoker, instanceFinder, new ArgumentsCollector()), responseProducer);
     }
 
+
+    public RoutesBuilder setRetrievers(Set<Retriever> retrievers) {
+        this.retrievers = retrievers;
+        return this;
+    }
 }

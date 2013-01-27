@@ -1,7 +1,7 @@
 package com.github.stkurilin.routes;
 
 import org.mockito.ArgumentMatcher;
-import org.testng.annotations.BeforeMethod;
+import org.mockito.Matchers;
 import org.testng.annotations.Test;
 
 import java.io.StringReader;
@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.github.stkurilin.routes.RulesReaderTest.Checker.call;
 import static com.google.common.collect.ImmutableList.of;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
@@ -20,71 +21,106 @@ import static org.mockito.Mockito.verify;
  * @author Stanislav Kurilin
  */
 public class RulesReaderTest {
-    private RulesReader rulesReader;
-    private RuleCreator ruleCreator;
-
-    @BeforeMethod
-    public void setUp() {
-        ruleCreator = mock(RuleCreator.class);
-        rulesReader = new RulesReader(ruleCreator);
-    }
-
     @Test
     public void testSimplestCase() {
-        read("GET /foo com.github.stkurilin.routes.Foo#foo");
-        check(Method.Get, uriSpec(literal("foo")), Foo.class, "foo", new ArrayList<String>());
+        when("GET /foo com.github.stkurilin.routes.Foo#foo")
+                .then(call().method(Method.GET)
+                        .uriSpec(literal("foo"))
+                        .methodId("foo")
+                        .clazz(Foo.class));
+
     }
 
     @Test
     public void testSeveralRules() {
-        read("GET /foo com.github.stkurilin.routes.Foo#foo");
-        read("GET /bar com.github.stkurilin.routes.Foo#bar");
-        check(Method.Get, uriSpec(literal("foo")), Foo.class, "foo", new ArrayList<String>());
-        check(Method.Get, uriSpec(literal("bar")), Foo.class, "bar", new ArrayList<String>());
+        when("GET /foo com.github.stkurilin.routes.Foo#foo", "GET /bar com.github.stkurilin.routes.Foo#bar")
+                .then(
+                        call()
+                                .method(Method.GET)
+                                .uriSpec(literal("foo"))
+                                .methodId("foo")
+                                .clazz(Foo.class),
+                        call()
+                                .method(Method.GET)
+                                .uriSpec(literal("bar"))
+                                .methodId("bar")
+                                .clazz(Foo.class)
+                );
     }
+
 
     @Test
     public void testImport() {
-        read("import com.github.stkurilin.routes.Foo");
-        read("GET /foo Foo#foo");
-        check(Method.Get, uriSpec(literal("foo")), Foo.class, "foo", new ArrayList<String>());
+        when("import com.github.stkurilin.routes.Foo", "GET /foo Foo#foo")
+                .then(call()
+                        .methodId("foo")
+                        .clazz(Foo.class));
     }
 
     @Test
     public void testMatcher() {
-        read("GET /foo/{id} com.github.stkurilin.routes.Foo#foo");
-        check(Method.Get, uriSpec(literal("foo"), matcher("id")), Foo.class, "foo", new ArrayList<String>());
+        when("GET /foo/{id} com.github.stkurilin.routes.Foo#foo")
+                .then(call()
+                        .method(Method.GET)
+                        .uriSpec(literal("foo"), matcher("id")));
+    }
+
+    @Test
+    public void testNoArgsDeclaration() {
+        when("GET /foo/ com.github.stkurilin.routes.Foo#foo")
+                .then(call().args(new ArrayList<String>()));
     }
 
     @Test
     public void testEmptyArgsDeclaration() {
-        read("GET /foo/ com.github.stkurilin.routes.Foo#foo()");
-        check(Method.Get, uriSpec(literal("foo")), Foo.class, "foo", new ArrayList<String>());
+        when("GET /foo/ com.github.stkurilin.routes.Foo#foo()")
+                .then(call().args(new ArrayList<String>()));
     }
 
     @Test
     public void testSingleArg() {
-        read("GET /foo/{id} com.github.stkurilin.routes.Foo#foo(id)");
-        check(Method.Get, uriSpec(literal("foo"), matcher("id")), Foo.class, "foo", of("id"));
+        when("GET /foo/{id} com.github.stkurilin.routes.Foo#foo(id)")
+                .then(call()
+                        .uriSpec(literal("foo"), matcher("id"))
+                        .args(of("id")));
     }
 
     @Test
     public void testSeveralArgs() {
-        read("GET /foo/{year}/{month} com.github.stkurilin.routes.Foo#foo(year, month)");
-        check(Method.Get, uriSpec(literal("foo"), matcher("year"), matcher("month")), Foo.class, "foo", of("year", "month"));
+        when("GET /foo/{year}/{month} com.github.stkurilin.routes.Foo#foo(year, month)")
+                .then(call()
+                        .uriSpec(literal("foo"), matcher("year"), matcher("month"))
+                        .args(of("year", "month")));
     }
 
-    private void check(Method method, UriSpecMatcher uriSpec, Class<?> clazz, String methodId, List<String> args) {
-        verify(ruleCreator).apply(eq(method), argThat(uriSpec), eq(clazz), eq(methodId), eq(args));
+
+    @Test
+    public void testTemplate() {
+        when("GET /foo com.github.stkurilin.routes.Foo#foo() foo.template")
+                .then(call().template("foo.template"));
     }
 
-    private UriSpecMatcher uriSpec(UriSpec.Item... items) {
-        return new UriSpecMatcher(Arrays.asList(items));
+    @Test(enabled = false)
+    public void testTemplateInNonArgedMethod() {
+        when("GET /foo com.github.stkurilin.routes.Foo#foo foo.template")
+                .then(call().template("foo.template"));
     }
 
-    private void read(String inp) {
-        rulesReader.apply(new StringReader(inp));
+    @Test(enabled = false)
+    public void testTemplateWorksWellInSeveralRulesCase() {
+        when("GET /foo com.github.stkurilin.routes.Foo#foo()",
+                "GET /bar com.github.stkurilin.routes.Foo#bar()")
+                .then(call()
+                        .methodId("foo")
+                        .template("foo.template"),
+                        call()
+                                .methodId("bat")
+                                .template("")
+                );
     }
+
+
+    //Infrastructure goes here
 
     static UriSpec.Item literal(final String value) {
         return new UriSpec.Item() {
@@ -102,6 +138,83 @@ public class RulesReaderTest {
                 return visitor.matcher(name);
             }
         };
+    }
+
+    private Fixture when(String... fileLines) {
+        return new Fixture(fileLines);
+    }
+
+    private static class Fixture {
+        private final RuleCreator ruleCreator = mock(RuleCreator.class);
+        private final RulesReader rulesReader = new RulesReader(ruleCreator);
+        private final String[] inp;
+
+        private Fixture(String[] inp) {
+            this.inp = inp;
+        }
+
+        public void then(Checker... calls) {
+            for (String each : inp) rulesReader.apply(new StringReader(each));
+            for (Checker each : calls) {
+                each.check(ruleCreator);
+
+            }
+        }
+    }
+
+
+    public static class Checker {
+        private Method method;
+        private UriSpecMatcher uriSpec;
+        private Class<?> clazz;
+        private String methodId;
+        private List<String> args;
+        private String template;
+
+        private Checker() {
+        }
+
+        public static Checker call() {
+            return new Checker();
+        }
+
+        public Checker method(Method method) {
+            this.method = method;
+            return this;
+        }
+
+        public Checker uriSpec(UriSpec.Item... items) {
+            this.uriSpec = new UriSpecMatcher(Arrays.asList(items));
+            return this;
+        }
+
+        public Checker clazz(Class<?> clazz) {
+            this.clazz = clazz;
+            return this;
+        }
+
+        public Checker methodId(String methodId) {
+            this.methodId = methodId;
+            return this;
+        }
+
+        public Checker args(List<String> args) {
+            this.args = args;
+            return this;
+        }
+
+        public Checker template(String template) {
+            this.template = template;
+            return this;
+        }
+
+        public void check(RuleCreator ruleCreator) {
+            verify(ruleCreator).apply(
+                    method == null ? Matchers.<Method>any() : eq(method),
+                    uriSpec == null ? Matchers.<UriSpec>any() : argThat(uriSpec),
+                    argThat(new TargetSpecMatcher(clazz, methodId, args)),
+                    template == null ? Matchers.<String>any() : eq(template));
+        }
     }
 
     private static class UriSpecMatcher extends ArgumentMatcher<UriSpec> {
@@ -141,6 +254,32 @@ public class RulesReaderTest {
                 })) return false;
             }
             return !rightIt.hasNext();
+        }
+    }
+
+    private static class TargetSpecMatcher extends ArgumentMatcher<TargetSpec> {
+        private Class<?> clazz;
+        private String methodId;
+        private List<String> args;
+
+        private TargetSpecMatcher(Class<?> clazz, String methodId, List<String> args) {
+            this.clazz = clazz;
+            this.methodId = methodId;
+            this.args = args;
+        }
+
+        @Override
+        public boolean matches(Object argument) {
+            if (!(argument instanceof TargetSpec))
+                return false;
+            final TargetSpec right = (TargetSpec) argument;
+            if (clazz != null && !clazz.equals(right.clazz()))
+                return false;
+            if (methodId != null && !methodId.equals(right.methodId()))
+                return false;
+            if (args != null && !args.equals(right.args()))
+                return false;
+            return true;
         }
     }
 }

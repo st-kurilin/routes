@@ -1,9 +1,8 @@
 package com.github.stkurilin.routes.servlet;
 
-import com.github.stkurilin.routes.MatchResult;
-import com.github.stkurilin.routes.Method;
-import com.github.stkurilin.routes.Routes;
-import com.github.stkurilin.routes.internal.*;
+import com.github.stkurilin.routes.*;
+import com.github.stkurilin.routes.internal.Request;
+import com.github.stkurilin.routes.internal.Response;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -17,11 +16,15 @@ public class RoutesFilter implements Filter {
     private static Routes routes;
 
     public static void initRoutes(Routes routes) {
+        if (routes != null && RoutesFilter.routes != null)
+            throw new RuntimeException("Several rules sources not implemented yet");
         RoutesFilter.routes = routes;
     }
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+        final String config = filterConfig.getInitParameter("config");
+        if (config != null) initRoutes(new RoutesBuilder().setRules(new RulesReader().apply(config)).build());
     }
 
     @Override
@@ -32,7 +35,9 @@ public class RoutesFilter implements Filter {
         if (routes == null) throw new RuntimeException("should be initialized");
         final HttpServletRequest req = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
+
         final MatchResult<Response> matchResult = routes.apply(new Request() {
+
             @Override
             public Method method() {
                 return Method.valueOf(req.getMethod());
@@ -41,6 +46,20 @@ public class RoutesFilter implements Filter {
             @Override
             public String path() {
                 return req.getPathInfo();
+            }
+
+            @Override
+            public String content() {
+                try {
+                    return convertStreamToString(req.getInputStream());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            private String convertStreamToString(java.io.InputStream is) {
+                java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+                return s.hasNext() ? s.next() : "";
             }
         });
         matchResult.apply(new MatchResult.MatchResultVisitor<Response, Void>() {

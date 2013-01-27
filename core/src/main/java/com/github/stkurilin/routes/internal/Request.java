@@ -9,4 +9,6 @@ public interface Request {
     Method method();
 
     String path();
+
+    String content();
 }
