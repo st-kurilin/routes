@@ -100,22 +100,21 @@ public class RulesReaderTest {
                 .then(call().template("foo.template"));
     }
 
-    @Test(enabled = false)
+    @Test
     public void testTemplateInNonArgedMethod() {
         when("GET /foo com.github.stkurilin.routes.Foo#foo foo.template")
                 .then(call().template("foo.template"));
     }
 
-    @Test(enabled = false)
+    @Test
     public void testTemplateWorksWellInSeveralRulesCase() {
-        when("GET /foo com.github.stkurilin.routes.Foo#foo()",
-                "GET /bar com.github.stkurilin.routes.Foo#bar()")
+        when("GET /foo com.github.stkurilin.routes.Foo#foo foo.template",
+                "GET /bar com.github.stkurilin.routes.Foo#bar")
                 .then(call()
                         .methodId("foo")
                         .template("foo.template"),
                         call()
-                                .methodId("bat")
-                                .template("")
+                                .methodId("bar")
                 );
     }
 
@@ -169,7 +168,7 @@ public class RulesReaderTest {
         private Class<?> clazz;
         private String methodId;
         private List<String> args;
-        private String template;
+        private String template = "";
 
         private Checker() {
         }
@@ -213,7 +212,7 @@ public class RulesReaderTest {
                     method == null ? Matchers.<Method>any() : eq(method),
                     uriSpec == null ? Matchers.<UriSpec>any() : argThat(uriSpec),
                     argThat(new TargetSpecMatcher(clazz, methodId, args)),
-                    template == null ? Matchers.<String>any() : eq(template));
+                    template.isEmpty() ? Matchers.<String>any() : eq(template));
         }
     }
 

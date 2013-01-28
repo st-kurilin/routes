@@ -133,7 +133,7 @@ public final class RulesReader {
                         return args;
                     }
                 },
-                template
+                template == null ? "" : template
         ));
     }
 

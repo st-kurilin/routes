@@ -35,9 +35,20 @@ import java.util.Iterator;
 %}
 
 CRLF= \n | \r | \r\n
-ACTION= "GET" | "POST" | "PUT" | "DELETE" | "HEAD"
 
+/* import start */
+IMPORT_KEYWORD="import"
+%state AFTER_IMPORT_KEYWORD
+%state AFTER_IMPORT_KEYWORD_DELIMITER
+IMPORT_CLASS=[a-zA-Z0-9$\.]+
+%state AFTER_IMPORT_CLASS_DELIMITER
+/* import end */
 
+/* action start */ ACTION= "GET" | "POST" | "PUT" | "DELETE" | "HEAD"
+%state AFTER_ACTION
+/* action end */
+
+/* url start */
 %state IN_URL
 SLASH="/"
 MATCHER=[a-zA-Z0-9]+
@@ -47,69 +58,69 @@ MATCHER_START="{"
 MATCHER_END="}"
 LITERAL=[a-zA-Z0-9%]+
 
-IMPORT_KEYWORD="import"
-%state AFTER_IMPORT_KEYWORD
-%state AFTER_IMPORT_KEYWORD_DELIMITER
-IMPORT_CLASS=[a-zA-Z0-9$\.]+
-%state AFTER_IMPORT_CLASS_DELIMITER
-
-INSTANCE_ID=[a-zA-Z0-9$\.]+
-
-INSTANCE_METHOD_SEPARATOR=[#]
-METHOD_ID=[a-zA-Z0-9$]+
-WHITE_SPACE_CHAR=[\ \n\r\t\f]
-
-%state AFTER_ACTION
-
-
 %state AFTER_URL
 %state AFTER_URL_DELIMITER
-%state AFTER_INSTANCE_ID
-%state AFTER_INSTANCE_ID_DELIMITER
-%state AFTER_INSTANCE_METHOD
+/* url end */
 
+/* target start */
+INSTANCE_ID=[a-zA-Z0-9$\.]+
+%state AFTER_INSTANCE_ID
+INSTANCE_METHOD_SEPARATOR=[#]
+%state AFTER_INSTANCE_ID_DELIMITER
+METHOD_ID=[a-zA-Z0-9$]+
+%state AFTER_TARGET
+/* target end */
+
+/* args start */
 %state IN_ARGS
 %state AFTER_ARG
 %state AFTER_ARGS
 
-TEMPLATE = [a-zA-Z0-9$\./]+
-
 %state AFTER_ARG
-ARG = [a-zA-Z0-9]+
+
+/* args end */
+
+/* template start */
+TEMPLATE = [a-zA-Z0-9$\./]+
+%state AFTER_TEMPLATE
+/* template end */
+
+WHITE_SPACE_CHAR=[\ \n\r\t\f]
+
 %%
-<YYINITIAL> {IMPORT_KEYWORD} { yybegin(AFTER_IMPORT_KEYWORD); return TokenType.IMPORT_KEYWORD; }
-<AFTER_IMPORT_KEYWORD> {WHITE_SPACE_CHAR}+ {  yybegin(AFTER_IMPORT_KEYWORD_DELIMITER); return TokenType.WHITE_SPACE; }
-<AFTER_IMPORT_KEYWORD_DELIMITER> {IMPORT_CLASS} {  yybegin(AFTER_IMPORT_CLASS_DELIMITER); return TokenType.IMPORT_CLASS; }
-<AFTER_IMPORT_CLASS_DELIMITER> {WHITE_SPACE_CHAR}+ {  yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
+/*import*/
+<YYINITIAL> {IMPORT_KEYWORD}                                    { yybegin(AFTER_IMPORT_KEYWORD); return TokenType.IMPORT_KEYWORD; }
+<AFTER_IMPORT_KEYWORD> {WHITE_SPACE_CHAR}+                      { yybegin(AFTER_IMPORT_KEYWORD_DELIMITER); return TokenType.WHITE_SPACE; }
+<AFTER_IMPORT_KEYWORD_DELIMITER> {IMPORT_CLASS}                 { yybegin(AFTER_IMPORT_CLASS_DELIMITER); return TokenType.IMPORT_CLASS; }
+<AFTER_IMPORT_CLASS_DELIMITER> {WHITE_SPACE_CHAR}+              { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
 
-<YYINITIAL> {ACTION} { yybegin(AFTER_ACTION); return TokenType.ACTION; }
-<AFTER_ACTION> {WHITE_SPACE_CHAR}+ {  yybegin(IN_URL); return TokenType.WHITE_SPACE; }
+/*action*/
+<YYINITIAL, AFTER_TARGET, AFTER_ARGS, AFTER_TEMPLATE> {ACTION}  { yybegin(AFTER_ACTION); return TokenType.ACTION; }
+<AFTER_ACTION> {WHITE_SPACE_CHAR}+                              { yybegin(IN_URL); return TokenType.WHITE_SPACE; }
 
-<IN_URL> {SLASH} { return TokenType.SLASH; }
-<IN_URL> {LITERAL} { return TokenType.LITERAL; }
-<IN_URL> {MATCHER_START} { yybegin(AFTER_MATCHER_START); return TokenType.MATCHER_START; }
-<AFTER_MATCHER_START> {MATCHER} { yybegin(AFTER_MATCHER); return TokenType.MATCHER; }
-<AFTER_MATCHER> {MATCHER_END} {  yybegin(IN_URL); return TokenType.MATCHER_END; }
+/*url*/
+<IN_URL> {
+    {SLASH}                                                     { return TokenType.SLASH; }
+    {LITERAL}                                                   { return TokenType.LITERAL; }
+    {MATCHER_START}                                             { yybegin(AFTER_MATCHER_START); return TokenType.MATCHER_START; }
+    {WHITE_SPACE_CHAR}+                                         { yybegin(AFTER_URL_DELIMITER); return TokenType.WHITE_SPACE; }
+}
 
-<IN_URL> {WHITE_SPACE_CHAR}+ {  yybegin(AFTER_URL_DELIMITER); return TokenType.WHITE_SPACE; }
-<AFTER_URL_DELIMITER> {INSTANCE_ID} { yybegin(AFTER_INSTANCE_ID); return TokenType.INSTANCE_ID; }
-<AFTER_INSTANCE_ID> {INSTANCE_METHOD_SEPARATOR} { yybegin(AFTER_INSTANCE_ID_DELIMITER); return TokenType.INSTANCE_METHOD_SEPARATOR; }
-<AFTER_INSTANCE_ID_DELIMITER> {METHOD_ID} { yybegin(AFTER_INSTANCE_METHOD); return TokenType.METHOD_ID; }
+<AFTER_MATCHER_START> {MATCHER}                                 { yybegin(AFTER_MATCHER); return TokenType.MATCHER; }
+<AFTER_MATCHER> {MATCHER_END}                                   { yybegin(IN_URL); return TokenType.MATCHER_END; }
 
-<AFTER_INSTANCE_METHOD> {WHITE_SPACE_CHAR}+ { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
-<AFTER_INSTANCE_METHOD> "(" { yybegin(IN_ARGS); return TokenType.ARGS_START; }
-<IN_ARGS> {ARG} {yybegin(AFTER_ARG); return TokenType.ARG;  }
-<AFTER_ARG> "," {yybegin(IN_ARGS); return TokenType.ARG_SEPARATOR;  }
-<IN_ARGS> ")" { yybegin(AFTER_ARGS); return TokenType.ARGS_END; }
-<AFTER_ARG> ")" { yybegin(AFTER_ARGS); return TokenType.ARGS_END; }
+<AFTER_URL_DELIMITER> {INSTANCE_ID}                             { yybegin(AFTER_INSTANCE_ID); return TokenType.INSTANCE_ID; }
 
+/*target*/
+<AFTER_INSTANCE_ID> {INSTANCE_METHOD_SEPARATOR}                 { yybegin(AFTER_INSTANCE_ID_DELIMITER); return TokenType.INSTANCE_METHOD_SEPARATOR; }
+<AFTER_INSTANCE_ID_DELIMITER> {METHOD_ID}                       { yybegin(AFTER_TARGET); return TokenType.METHOD_ID; }
+<AFTER_TARGET> "("                                              { yybegin(IN_ARGS); return TokenType.ARGS_START; }
+<IN_ARGS> [a-zA-Z0-9]+                                          { yybegin(AFTER_ARG); return TokenType.ARG; }
+<AFTER_ARG> ","                                                 { yybegin(IN_ARGS); return TokenType.ARG_SEPARATOR; }
+<IN_ARGS> ")"                                                   { yybegin(AFTER_ARGS); return TokenType.ARGS_END; }
+<AFTER_ARG> ")"                                                 { yybegin(AFTER_ARGS); return TokenType.ARGS_END; }
 
-<AFTER_ARGS> {TEMPLATE} { yybegin(YYINITIAL); return TokenType.TEMPLATE; }
+<AFTER_TARGET,  AFTER_ARGS> {TEMPLATE}                          { yybegin(AFTER_TEMPLATE); return TokenType.TEMPLATE; }
 
-
-
-
-
-
-{WHITE_SPACE_CHAR}+ { return TokenType.WHITE_SPACE; }
+{WHITE_SPACE_CHAR}+                                             { return TokenType.WHITE_SPACE; }
 . { return TokenType.BAD_CHARACTER; }
